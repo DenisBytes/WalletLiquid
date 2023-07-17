@@ -33,7 +33,7 @@
         }
 
         body {
-            background-color: black;
+            background-color: white;
             color: white;
         }
 
@@ -74,8 +74,8 @@
 <body>
 <nav class="d-flex justify-content-between align-items-center p-2">
     <div class="d-flex justify-content-between align-items-center nav-logo" style="width: 40%">
-        <img id="nav-logo-img" src="${pageContext.request.contextPath}/images/hyperliquid1.gif">
-        <div class="d-flex">
+        <div class="d-flex align-items-center">
+            <img id="nav-logo-img" src="${pageContext.request.contextPath}/images/hyperliquid1.gif">
             <h3 style="margin-left: 5px;font-family: 'Libre Baskerville';">Wallet<h3 style="font-style: italic;font-family: 'Libre Baskerville'">liquid</h3></h3>
         </div>
         <a href="/trade" class="text-muted text-decoration-none" ><h5>Trade</h5></a>
@@ -87,7 +87,7 @@
         <a href="/logout"><button class="p-2 nav-btn">Log out</button></a>
     </div>
 </nav>
-<main class="w-100 p-4">
+<main class="m-4 p-4">
     <table class="table">
         <thead>
         <th scope="col">Rank</th>
@@ -98,7 +98,7 @@
         <c:forEach var="user" items="${userList}" varStatus="loop">
             <tr>
                 <td>${loop.index + 1}</td>
-                <td><a href="/leaderboard/${user.id}">${user.firstName} ${user.lastName}</a></td>
+                <td><a href="/leaderboard/${user.id}" class="text-decoration-none">${user.firstName} ${user.lastName}</a></td>
                 <td>${user.usd}</td>
             </tr>
         </c:forEach>

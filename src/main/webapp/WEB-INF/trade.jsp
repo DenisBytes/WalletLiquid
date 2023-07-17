@@ -89,8 +89,8 @@
 <body>
 <nav class="d-flex justify-content-between align-items-center p-2">
   <div class="d-flex justify-content-between align-items-center nav-logo" style="width: 40%">
-    <img id="nav-logo-img" src="${pageContext.request.contextPath}/images/hyperliquid1.gif">
-    <div class="d-flex">
+    <div class="d-flex align-items-center">
+      <img id="nav-logo-img" src="${pageContext.request.contextPath}/images/hyperliquid1.gif">
       <h3 style="margin-left: 5px;font-family: 'Libre Baskerville';">Wallet<h3 style="font-style: italic;font-family: 'Libre Baskerville'">liquid</h3></h3>
     </div>
     <a href="/leaderboard" class="text-muted text-decoration-none" ><h5>Leaderboard</h5></a>
@@ -247,16 +247,16 @@
             </thead>
             <tbody>
             <c:forEach var="bid" items="${fn:split(fn:substringAfter(bids, '['), '] [')}" varStatus="status" end="10">
-               <tr>
-                 <c:set var="bidArr" value="${fn:split(bid, ',')}" />
-                 <c:set var="bidPrice" value="${bidArr[0].replace('\"','')}" />
-                 <c:set var="bidSize" value="${bidArr[1].replace('\"','')}" />
-                 <td class="green"><fmt:formatNumber value="${bidPrice}" pattern="0.000" /></td>
-                 <td>${bidSize}</td>
-                 <c:if test="${status.count % 2 != 0}">
-                   <td><fmt:formatNumber value="${bidPrice * bidSize}" pattern="0.00" /></td>
-                 </c:if>
-               </tr>
+              <tr>
+                <c:set var="bidArr" value="${fn:split(bid, ',')}" />
+                <c:set var="bidPrice" value="${bidArr[0].replace('\"','')}" />
+                <c:set var="bidSize" value="${bidArr[1].replace('\"','')}" />
+                <td class="green"><fmt:formatNumber value="${bidPrice}" pattern="0.000" /></td>
+                <td>${bidSize}</td>
+                <c:if test="${status.count % 2 != 0}">
+                  <td><fmt:formatNumber value="${bidPrice * bidSize}" pattern="0.00" /></td>
+                </c:if>
+              </tr>
             </c:forEach>
             </tbody>
           </table>
@@ -383,7 +383,7 @@
               return entryPrice;
             }
 
-            setInterval(getEntryPrice, 60000);
+            setInterval(getEntryPrice, 5000);
 
             // Update liquidation price on input change
             document.getElementById("leverageSlider").addEventListener("input", updateLiquidationPrice);
@@ -391,6 +391,15 @@
             document.addEventListener("DOMContentLoaded", updateLiquidationPrice);
             document.addEventListener("DOMContentLoaded", getEntryPrice);
           </script>
+          <div class="card" style="width: 100%; margin-top: 8%">
+            <div class="card-body bg-warning">
+              <h5 class="card-title">ATTENTION</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Please Read</h6>
+              <p class="card-text">Before placing or closing any order, reload the page, in order to get the updated data. Thanks for understanding</p>
+            </div>
+          </div>
+
+          </div>
         </div>
         <div class="tab-pane fade" id="limit" >
           <h1>Coming Soon...</h1>
@@ -400,7 +409,7 @@
     </div>
   </div>
 
-  <div class="w-100">
+  <div class="m-4 p-4" >
     <ul class="nav nav-pills" id="myTab1">
       <li class="nav-item"><a class="nav-link active" href="#positions" data-bs-toggle="pill">Positions</a></li>
       <li class="nav-item"><a class="nav-link" href="#orders" data-bs-toggle="pill">Orders</a></li>

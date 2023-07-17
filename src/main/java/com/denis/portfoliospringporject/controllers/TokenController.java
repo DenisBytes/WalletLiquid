@@ -26,10 +26,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
+
 
 @Controller
 public class TokenController {
@@ -43,7 +40,10 @@ public class TokenController {
     TypeService typeService;
 
     @GetMapping("/index")
-    public String index(Model model) {
+    public String index(Model model, HttpSession session) {
+
+        session.setAttribute("loggedInUserID", null);
+
         OkHttpClient client = new OkHttpClient().newBuilder().build();
 
         List<String> desiredSymbols = Arrays.asList("BTC", "ETH", "HBAR", "XDC", "LDO", "CSPR", "MKR", "CRV",
@@ -119,32 +119,32 @@ public class TokenController {
     @GetMapping("/trade")
     public String showOrderBook(Model model, HttpSession session) {
 
-        if(session.getAttribute("loggedInUserID") == null){
+        if (session.getAttribute("loggedInUserID") == null){
             return "redirect:/login";
         }
+
         User user = userService.findById((Long) session.getAttribute("loggedInUserID"));
-        model.addAttribute("user",user);
+        model.addAttribute("user", user);
 
         Transaction transactionMarket = new Transaction();
         Transaction transactionLimit = new Transaction();
-
         model.addAttribute("transactionMarket", transactionMarket);
         model.addAttribute("transactionLimit", transactionLimit);
-        model.addAttribute("openOrders", transactionService.allUserTransactionsByType((Long) session.getAttribute("loggedInUserID"),"open"));
-        model.addAttribute("closedOrders", transactionService.allUserTransactionsByType((Long) session.getAttribute("loggedInUserID"),"close"));
-        model.addAttribute("pendingOrders", transactionService.allUserTransactionsByType((Long) session.getAttribute("loggedInUserID"),"pending"));
+        model.addAttribute("openOrders", transactionService.allUserTransactionsByType((Long) session.getAttribute("loggedInUserID"), "open"));
+        model.addAttribute("closedOrders", transactionService.allUserTransactionsByType((Long) session.getAttribute("loggedInUserID"), "close"));
+        model.addAttribute("pendingOrders", transactionService.allUserTransactionsByType((Long) session.getAttribute("loggedInUserID"), "pending"));
 
         OkHttpClient client = new OkHttpClient().newBuilder().build();
-        String symbol = new String();
+        String symbol = session.getAttribute("symbol") != null ? (String) session.getAttribute("symbol") : "BTC";
 
-        if(session.getAttribute("symbol") == null){
-            symbol = "BTC";
-        }else{
-            symbol = (String) session.getAttribute("symbol"); // Get the symbol from the session
-        }
+        double bitcoinPrice = 0.0;
+        double ethereumPrice = 0.0;
+        double uniswapPrice = 0.0;
+        double ripplePrice = 0.0;
+        double chainlinkPrice = 0.0;
 
         try {
-            // Retrieve data from the CEX.IO API for order book
+            // Retrieve data from the Binance API for order book
             Request orderBookRequest = new Request.Builder()
                     .url("https://data-api.binance.vision/api/v3/depth?symbol=" + symbol + "USDT")
                     .build();
@@ -174,107 +174,114 @@ public class TokenController {
                     .url("https://data-api.binance.vision/api/v3/avgPrice?symbol=LINKUSDT")
                     .build();
 
-            try (Response orderBookResponse = client.newCall(orderBookRequest).execute();
-                 Response tradeHistoryResponse = client.newCall(tradeHistoryRequest).execute();
-                 Response bitcoinResponse = client.newCall(bitcoinRequest).execute();
-                 Response ethereumResponse = client.newCall(ethereumRequest).execute();
-                 Response uniswapResponse = client.newCall(uniswapRequest).execute();
-                 Response rippleResponse = client.newCall(rippleRequest).execute();
-                 Response chainlinkResponse = client.newCall(chainlinkRequest).execute()) {
+            Response orderBookResponse = client.newCall(orderBookRequest).execute();
+            Response tradeHistoryResponse = client.newCall(tradeHistoryRequest).execute();
+            Response bitcoinResponse = client.newCall(bitcoinRequest).execute();
+            Response ethereumResponse = client.newCall(ethereumRequest).execute();
+            Response uniswapResponse = client.newCall(uniswapRequest).execute();
+            Response rippleResponse = client.newCall(rippleRequest).execute();
+            Response chainlinkResponse = client.newCall(chainlinkRequest).execute();
 
-                if (orderBookResponse.isSuccessful() && tradeHistoryResponse.isSuccessful()) {
-                    String orderBookResponseBody = orderBookResponse.body().string();
-                    String tradeHistoryResponseBody = tradeHistoryResponse.body().string();
-                    String bitcoinResponseBody = bitcoinResponse.body().string();
-                    String ethereumResponseBody = ethereumResponse.body().string();
-                    String uniswapResponseBody = uniswapResponse.body().string();
-                    String rippleResponseBody = rippleResponse.body().string();
-                    String chainlinkResponseBody = chainlinkResponse.body().string();
+            if (orderBookResponse.isSuccessful() && tradeHistoryResponse.isSuccessful()) {
+                String orderBookResponseBody = orderBookResponse.body().string();
+                String tradeHistoryResponseBody = tradeHistoryResponse.body().string();
+                String bitcoinResponseBody = bitcoinResponse.body().string();
+                String ethereumResponseBody = ethereumResponse.body().string();
+                String uniswapResponseBody = uniswapResponse.body().string();
+                String rippleResponseBody = rippleResponse.body().string();
+                String chainlinkResponseBody = chainlinkResponse.body().string();
 
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode orderBookRoot = objectMapper.readTree(orderBookResponseBody);
+                JsonNode tradeHistoryRoot = objectMapper.readTree(tradeHistoryResponseBody);
+                JsonNode bitcoinRoot = objectMapper.readTree(bitcoinResponseBody);
+                JsonNode ethereumRoot = objectMapper.readTree(ethereumResponseBody);
+                JsonNode uniswapRoot = objectMapper.readTree(uniswapResponseBody);
+                JsonNode rippleRoot = objectMapper.readTree(rippleResponseBody);
+                JsonNode chainlinkRoot = objectMapper.readTree(chainlinkResponseBody);
 
-                    ObjectMapper orderBookObjectMapper = new ObjectMapper();
-                    JsonNode orderBookRoot = orderBookObjectMapper.readTree(orderBookResponseBody);
+                JsonNode bidsNode = orderBookRoot.path("bids");
+                JsonNode asksNode = orderBookRoot.path("asks");
+                double bitcoinPricePre = bitcoinRoot.path("price").asDouble();
+                double ethereumPricePre = ethereumRoot.path("price").asDouble();
+                double uniswapPricePre = uniswapRoot.path("price").asDouble();
+                double ripplePricePre = rippleRoot.path("price").asDouble();
+                double chainlinkPricePre = chainlinkRoot.path("price").asDouble();
 
-                    ObjectMapper tradeHistoryObjectMapper = new ObjectMapper();
-                    JsonNode tradeHistoryRoot = tradeHistoryObjectMapper.readTree(tradeHistoryResponseBody);
+                DecimalFormat noDecimalFormat = new DecimalFormat("#");
+                DecimalFormat oneDecimalFormat = new DecimalFormat("#.#");
+                DecimalFormat threeDecimalFormat = new DecimalFormat("#.###");
 
-                    ObjectMapper bitcoinObjectMapper = new ObjectMapper();
-                    JsonNode bitcoinRoot = bitcoinObjectMapper.readTree(bitcoinResponseBody);
+                bitcoinPrice = Double.parseDouble(noDecimalFormat.format(bitcoinPricePre));
+                ethereumPrice = Double.parseDouble(oneDecimalFormat.format(ethereumPricePre));
+                uniswapPrice = Double.parseDouble(threeDecimalFormat.format(uniswapPricePre));
+                ripplePrice = Double.parseDouble(threeDecimalFormat.format(ripplePricePre));
+                chainlinkPrice = Double.parseDouble(threeDecimalFormat.format(chainlinkPricePre));
 
-                    ObjectMapper ethereumObjectMapper = new ObjectMapper();
-                    JsonNode ethereumRoot = ethereumObjectMapper.readTree(ethereumResponseBody);
+                List<Map<String, String>> tradeHistoryList = new ArrayList<>();
 
-                    ObjectMapper uniswapObjectMapper = new ObjectMapper();
-                    JsonNode uniswapRoot = uniswapObjectMapper.readTree(uniswapResponseBody);
+                for (JsonNode tradeNode : tradeHistoryRoot) {
+                    Map<String, String> tradeData = new HashMap<>();
+                    tradeData.put("type", tradeNode.get("type").asText());
+                    tradeData.put("price", tradeNode.get("price").asText());
+                    tradeData.put("amount", tradeNode.get("amount").asText());
 
-                    ObjectMapper rippleObjectMapper = new ObjectMapper();
-                    JsonNode rippleRoot = rippleObjectMapper.readTree(rippleResponseBody);
+                    String timestamp = tradeNode.get("date").asText();
+                    long timestampMillis = Long.parseLong(timestamp) * 1000L;
+                    Instant instant = Instant.ofEpochMilli(timestampMillis);
+                    LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+                    String formattedTime = dateTime.format(formatter);
 
-                    ObjectMapper chainlinkObjectMapper = new ObjectMapper();
-                    JsonNode chainlinkRoot = chainlinkObjectMapper.readTree(chainlinkResponseBody);
-
-                    // Extract the necessary data from the order book response
-                    JsonNode bidsNode = orderBookRoot.path("bids");
-                    JsonNode asksNode = orderBookRoot.path("asks");
-
-                    double bitcoinPricePre = bitcoinRoot.path("price").asDouble();
-                    double ethereumPricePre = ethereumRoot.path("price").asDouble();
-                    double uniswapPricePre = uniswapRoot.path("price").asDouble();
-                    double ripplePricePre = rippleRoot.path("price").asDouble();
-                    double chainlinkPricePre = chainlinkRoot.path("price").asDouble();
-
-
-                    DecimalFormat noDecimalFormat = new DecimalFormat("#");
-                    DecimalFormat oneDecimalFormat = new DecimalFormat("#.#");
-                    DecimalFormat threeDecimalFormat = new DecimalFormat("#.###");
-
-                    String bitcoinPrice = noDecimalFormat.format(bitcoinPricePre);
-                    String ethereumPrice = oneDecimalFormat.format(ethereumPricePre);
-                    String uniswapPrice = threeDecimalFormat.format(uniswapPricePre);
-                    String ripplePrice = threeDecimalFormat.format(ripplePricePre);
-                    String chainlinkPrice = threeDecimalFormat.format(chainlinkPricePre);
-
-
-                    // Extract the necessary data from the trade history response
-                    List<Map<String, String>> tradeHistoryList = new ArrayList<>();
-
-                    for (JsonNode tradeNode : tradeHistoryRoot) {
-                        Map<String, String> tradeData = new HashMap<>();
-                        tradeData.put("type", tradeNode.get("type").asText());
-                        tradeData.put("price", tradeNode.get("price").asText());
-                        tradeData.put("amount", tradeNode.get("amount").asText());
-
-                        String timestamp = tradeNode.get("date").asText();
-                        long timestampMillis = Long.parseLong(timestamp) * 1000L;
-                        Instant instant = Instant.ofEpochMilli(timestampMillis);
-                        LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-                        String formattedTime = dateTime.format(formatter);
-
-                        tradeData.put("date", formattedTime);
-                        tradeHistoryList.add(tradeData);
-                    }
-
-                    // Pass the data to the view
-                    model.addAttribute("symbol",symbol);
-                    model.addAttribute("bids", bidsNode);
-                    model.addAttribute("asks", asksNode);
-                    model.addAttribute("tradeHistory", tradeHistoryList);
-                    model.addAttribute("bitcoinPrice", Double.parseDouble(bitcoinPrice));
-                    model.addAttribute("ethereumPrice", Double.parseDouble(ethereumPrice));
-                    model.addAttribute("uniswapPrice", Double.parseDouble(uniswapPrice));
-                    model.addAttribute("ripplePrice", Double.parseDouble(ripplePrice));
-                    model.addAttribute("chainlinkPrice", Double.parseDouble(chainlinkPrice));
-                } else {
-                    // Handle unsuccessful response
+                    tradeData.put("date", formattedTime);
+                    tradeHistoryList.add(tradeData);
                 }
+
+                model.addAttribute("symbol", symbol);
+                model.addAttribute("bids", bidsNode);
+                model.addAttribute("asks", asksNode);
+                model.addAttribute("tradeHistory", tradeHistoryList);
+                model.addAttribute("bitcoinPrice", bitcoinPrice);
+                model.addAttribute("ethereumPrice", ethereumPrice);
+                model.addAttribute("uniswapPrice", uniswapPrice);
+                model.addAttribute("ripplePrice", ripplePrice);
+                model.addAttribute("chainlinkPrice", chainlinkPrice);
+            } else {
+                // Handle unsuccessful response
             }
         } catch (Exception e) {
             e.printStackTrace();
+            // Handle exception as needed
+        }
+
+        List<Transaction> transactionList = transactionService.allTransactionsByType("open");
+
+        for (Transaction transaction : transactionList) {
+            double tokenPrice = 0.0;
+
+            if (transaction.getSymbol().equals("BTC")) {
+                tokenPrice = bitcoinPrice;
+            } else if (transaction.getSymbol().equals("ETH")) {
+                tokenPrice = ethereumPrice;
+            } else if (transaction.getSymbol().equals("UNI")) {
+                tokenPrice = uniswapPrice;
+            } else if (transaction.getSymbol().equals("XRP")) {
+                tokenPrice = ripplePrice;
+            } else if (transaction.getSymbol().equals("LINK")) {
+                tokenPrice = chainlinkPrice;
+            }
+
+            if (transaction.getDirection().equals("short") && tokenPrice > transaction.getLiqPrice()) {
+                return "redirect:/liquidation/" + transaction.getId();
+            } else if (transaction.getDirection().equals("long") && tokenPrice < transaction.getLiqPrice()) {
+                return "redirect:/liquidation/" + transaction.getId();
+            }
         }
 
         return "trade";
     }
+
+
 
     @PostMapping("/elaborate")
     public String trade(@RequestParam String symbol, HttpSession session) {
@@ -285,7 +292,7 @@ public class TokenController {
 
     @PostMapping("/marketorder")
     public String marketorder(@Valid @ModelAttribute("transactionMarket") Transaction transactionMarket,
-                             BindingResult result, Model model, HttpSession session){
+                              BindingResult result, HttpSession session){
 
         if(session.getAttribute("loggedInUserID") == null){
             return "redirect:/login";
@@ -317,7 +324,7 @@ public class TokenController {
     @GetMapping("/closemarket/{transactionId}")
     public String closeOrder(@PathVariable("transactionId") Long transactionId,
                              @RequestParam("traLastPrice") double traLastPrice,
-                             Model model, HttpSession session){
+                             HttpSession session){
         Transaction transaction = transactionService.findTransaction(transactionId);
         Type type = typeService.findByName("close");
 
@@ -333,7 +340,37 @@ public class TokenController {
 
         User user = userService.findById((Long) session.getAttribute("loggedInUserID"));
 
-        user.setUsd(transaction.getAmount()+transaction.getEarnings());
+
+        System.out.println("user usd: "+user.getUsd());
+        System.out.println("tran amount: "+transaction.getAmount());
+        System.out.println("tran earnings: "+transaction.getEarnings());
+
+        user.setUsd(user.getUsd() +transaction.getEarnings());
+        userService.upgradeUser(user);
+        transactionService.saveTransaction(transaction);
+
+        return "redirect:/trade";
+    }
+
+    @GetMapping("/liquidation/{transactionId}")
+    public String liquidation(@PathVariable("transactionId") Long transactionId,
+                             HttpSession session){
+        Transaction transaction = transactionService.findTransaction(transactionId);
+        Type type = typeService.findByName("close");
+
+
+        transaction.setType(type);
+        if(transaction.getDirection().equals("long")){
+            transaction.setLastPrice(transaction.getLiqPrice());
+            transaction.setEarnings(transaction.getTokenSize()*(transaction.getLastPrice()-transaction.getPrice()));
+        } else if(transaction.getDirection().equals("short")){
+            transaction.setLastPrice(transaction.getLiqPrice());
+            transaction.setEarnings(transaction.getTokenSize()*(transaction.getPrice()-transaction.getLastPrice()));
+        }
+
+        User user = userService.findById((Long) session.getAttribute("loggedInUserID"));
+
+        user.setUsd(user.getUsd()+transaction.getEarnings());
         userService.upgradeUser(user);
         transactionService.saveTransaction(transaction);
 

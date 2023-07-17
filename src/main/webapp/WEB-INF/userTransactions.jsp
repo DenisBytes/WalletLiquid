@@ -33,8 +33,11 @@
     }
 
     body {
-      background-color: black;
+      background-color: white;
       color: white;
+    }
+    main{
+      background-color: black;
     }
 
     h2 {
@@ -69,12 +72,12 @@
 <body>
 <nav class="d-flex justify-content-between align-items-center p-2">
   <div class="d-flex justify-content-between align-items-center nav-logo" style="width: 40%">
-    <img id="nav-logo-img" src="${pageContext.request.contextPath}/images/hyperliquid1.gif">
-    <div class="d-flex">
+    <div class="d-flex align-items-center">
+      <img id="nav-logo-img" src="${pageContext.request.contextPath}/images/hyperliquid1.gif">
       <h3 style="margin-left: 5px;font-family: 'Libre Baskerville';">Wallet<h3 style="font-style: italic;font-family: 'Libre Baskerville'">liquid</h3></h3>
     </div>
     <a href="/trade" class="text-muted text-decoration-none" ><h5>Trade</h5></a>
-    <a href="/history" class="text-muted text-decoration-none" ><h5>Trade History</h5></a>
+    <a href="/history/${currentUser.id}" class="text-muted text-decoration-none" ><h5>Trade History</h5></a>
   </div>
   <div class="d-flex w-25 justify-content-around">
     <h3>Welcome ${currentUser.firstName}</h3>
@@ -82,8 +85,11 @@
     <a href="/logout"><button class="p-2 nav-btn">Log out</button></a>
   </div>
 </nav>
-<main class="w-100 p-4">
-  <h1>${user.firstName} ${user.lastName}</h1>
+<main class="m-4 p-4">
+  <div class="d-flex">
+    <img src="${pageContext.request.contextPath}${user.image}" alt="Not found" width="50px" height="50px" style="background-color: white; border: white 2px solid"/>
+    <h1>${user.firstName} ${user.lastName}</h1>
+  </div>
   <table class="table">
     <thead>
       <th scope="col">Time</th>

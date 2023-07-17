@@ -29,4 +29,8 @@ public class TransactionService {
         return transactionRepository.findByUserId(userId);
     }
 
+    public List<Transaction> allTransactionsByType(String typeName){
+        return transactionRepository.findByType_Name(typeName);
+    }
+
 }

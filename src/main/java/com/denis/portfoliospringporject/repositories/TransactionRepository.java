@@ -16,4 +16,6 @@ public interface TransactionRepository extends CrudRepository<Transaction, Long>
     List<Transaction> findByUserIdAndTypeName(Long userId, String typeName);
 
     List<Transaction> findByUserId(Long userId);
+
+    List<Transaction> findByType_Name(String name);
 }
