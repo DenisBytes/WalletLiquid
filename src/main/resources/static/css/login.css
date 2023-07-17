@@ -1,0 +1,11 @@
+.signup-form{
+    display: flex;
+    justify-content: center;
+}
+
+.form-wrapper {
+    color: #fff;
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
