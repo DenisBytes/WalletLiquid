@@ -2,7 +2,6 @@ package com.denis.portfoliospringporject.services;
 
 import com.denis.portfoliospringporject.models.LoginUser;
 import com.denis.portfoliospringporject.models.User;
-import com.denis.portfoliospringporject.repositories.RoleRepository;
 import com.denis.portfoliospringporject.repositories.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +16,6 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepo;
-    @Autowired
-    private RoleRepository roleRepo;
-
 
     public User register(User newUser, BindingResult result){
 
@@ -73,10 +69,6 @@ public class UserService {
         return userRepo.findAll();
     }
 
-    public User upgradeUser(User user) {
-        user.setRoles(roleRepo.findByName("ROLE_ADMIN"));
-        return userRepo.save(user);
-    }
 
     public void deleteUser(User user) {
         userRepo.delete(user);

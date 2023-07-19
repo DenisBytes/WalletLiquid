@@ -3,6 +3,7 @@ package com.denis.portfoliospringporject.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -29,9 +30,10 @@ public class User {
     @Size(min=5, message = "At least 5 characters")
     private String email;
 
-    private double usd;
+    private double usd = 100000;
 
-    private String image;
+    @NotNull
+    private String image = "/images/pfp.png";
 
     @NotBlank(message = "Password is required")
     @Size(min=5, message = "At least 5 characters")
@@ -51,31 +53,11 @@ public class User {
 
     private Date lastLogin;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private List<Role> roles;
-
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private List<Transaction> transactions;
 
 
     public User() {}
-
-    public User(Long id, String firstName, String lastName, String email, String password, String confirm, Date createdAt, Date lastLogin, List<Role> roles) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.confirm = confirm;
-        this.createdAt = createdAt;
-        this.lastLogin = lastLogin;
-        this.roles = roles;
-    }
 
     public Long getId() {
         return id;
@@ -141,13 +123,6 @@ public class User {
         this.lastLogin = lastLogin;
     }
 
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
     public List<Transaction> getTransactions() {
         return transactions;
     }

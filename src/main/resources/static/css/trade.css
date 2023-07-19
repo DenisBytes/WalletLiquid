@@ -1,0 +1,205 @@
+.nav-brand{
+    width: 35%;
+}
+
+.m-4.p-4{
+    border-radius: 0.5rem;
+}
+
+.tradehistory{
+    border: 1px solid #97fce4;
+}
+
+.orderbook{
+    border: 1px solid #97fce4;
+    border-bottom: none;
+}
+.orderbook:nth-child(3){
+    border-bottom: 1px solid #97fce4;
+    border-top: none;
+}
+
+.mini-nav{
+    border: #97fce4 1px solid;
+    border-radius: 0.5rem;
+    padding: 2%;
+}
+/* Styles for the outer div */
+.trading-container {
+    margin: 2%;
+    padding: 1%;
+    border-radius: 0.5rem;
+}
+
+/* Styles for the nested div with class col-6 */
+div.col-6 {
+    flex-basis: 50%;
+    max-width: 50%;
+}
+
+/* Styles for the nested div with class col-3 */
+div.col-3 {
+    flex-basis: 25%;
+    max-width: 25%;
+    height: 550px;
+    padding: 1%;
+    height: min-content;
+}
+h3{
+    color: white;
+}
+/* Styles for the form inside the first col-6 div */
+div.col-6 form {
+    width: 100%;
+}
+
+/* Styles for the "tokens" class div */
+.tokens {
+    display: flex;
+    overflow: hidden;
+    padding: 1%;
+    background-color: black;
+    color: white;
+    white-space: nowrap;
+}
+
+/* Styles for the "tokens-slide" class div */
+.tokens-slide {
+    animation: 10s slide infinite linear;
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+/* Styles for the span elements inside the "tokens-slide" div */
+.tokens-slide span {
+    display: inline-block;
+    padding: 0% 0.125%;
+    text-overflow: fade; /* Add ellipsis (...) to indicate hidden text */
+}
+
+/* Styles for the "tradingview-widget-container" class div */
+.tradingview-widget-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Styles for the "side" class div */
+.side {
+    width: 100%;
+    height: 33%;
+}
+
+/* Styles for the "table" elements */
+table {
+    width: 100%;
+    color: white;
+    font-size: 12px;
+    border-collapse: collapse;
+}
+
+/* Styles for the "th" and "td" elements inside the tables */
+th, td {
+    padding: 1%;
+    text-align: left;
+}
+
+
+/* Styles for the "nav" class */
+nav {
+    background-color: black;
+    width: 100%;
+}
+
+/* Styles for the "nav-logo-img" ID */
+#nav-logo-img {
+    padding: 0% 2%;
+    width: 75px;
+    height: 75px;
+}
+
+/* Styles for the "nav-logo" class */
+.nav-logo {
+    color: white;
+}
+
+/* Styles for the "nav-btn" class */
+.nav-btn {
+    background-color: blue;
+    color: white;
+    border-radius: 5%;
+    border: 1px solid blue;
+}
+
+/* Styles for the "tradingview_6184e" ID */
+#tradingview_6184e {
+    height: 550px;
+}
+
+/* Additional styles for the whole body */
+body {
+    background-color: white;
+    color: white;
+}
+
+/* Additional styles for h2 elements */
+h2 {
+    color: white;
+}
+
+
+.card{
+    color: white;
+}
+
+/* Additional styles for elements with class "side" */
+.side {
+    width: 100%;
+    height: 33%;
+    padding: 2%;
+}
+
+/* Additional styles for select elements */
+select {
+    color: black;
+}
+
+.row{
+    color: white;
+}
+
+/* New styles added for the "trading-container" and its child div elements */
+/* (div.col-6, div.col-3, div.col-6 form, .tradingview-widget-container) */
+/* Styles for the tokens and tokens-slide classes */
+@keyframes slide {
+    from {
+        transform: translateX(0%);
+    }
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+.tokens {
+    display: flex;
+    overflow: hidden;
+    padding: 1%;
+    background-color: black;
+    color: white;
+    white-space: nowrap;
+    margin-left: 2%;
+}
+
+.tokens:hover .tokens-slide {
+    animation-play-state: paused;
+}
+
+.tokens-slide {
+    animation: 10s slide infinite linear;
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+.tokens-slide span {
+    display: inline-block;
+    padding: 0% 0.125%;
+    text-overflow: fade; /* Add ellipsis (...) to indicate hidden text */
+}

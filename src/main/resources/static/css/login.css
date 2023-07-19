@@ -3,9 +3,67 @@
     justify-content: center;
 }
 
-.form-wrapper {
-    color: #fff;
+ body{
+     overflow: hidden;
+     background-color: #283454;
+     color: white;
+ }
+
+.signup-form{
     display: flex;
+    justify-content: center;
+}
+
+.form-wrapper {
+    padding: 0% 10%;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    color: #fff;
     margin-bottom: 16px;
+}
+
+.form-button{
+    padding-bottom: 1%;
+    display: flex;
+    justify-content: center;
+}
+
+.button{
+    background-color: blue;
+    color: white;
+    border-radius: 1rem;
+    padding:2% 5%;
+    font-size: 17px;
+}
+
+.outside{
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    margin: 8% auto;
+}
+
+.inside{
+    display: flex;
+    width: 50%;
+}
+
+.left{
+    width: 50%;
+    background-color: #fafafb;
+    color: black;
+}
+
+.right{
+    width: 50%;
+    position: relative;
+    bottom: 2px;
+}
+
+#signup{
+    height: auto;
+}
+#signin{
+    height: 450px;
 }

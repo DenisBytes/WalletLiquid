@@ -6,108 +6,48 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link rel="stylesheet" href="/css/trade.css">
   <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
   <style>
-
-    nav{
-      background-color: black;
-      width: 100%;
+    .special-green{
+      background-color: #0f2e29;
     }
-
-    #nav-logo-img{
-      padding: 0% 2%;
-      width: 75px;
-      height: 75px;
+    .special-darkgreen{
+      background-color: #02221f;
     }
-    .nav-logo{
-      color: white;
+    .green{
+      color: #02c903;
     }
-
-    .nav-btn{
-      background-color: blue;
-      color: white;
-      border-radius: 5%;
-      border: 1px solid blue;
-
+    .red{
+      color: #e90c2f;
     }
-
-    #tradingview_6184e{
-      height: 550px;
-    }
-    body {
-      background-color: white;
-      color: white;
-    }
-
-    h2 {
-      color: white;
-    }
-
-    div{background-color: black;
-
-    }
-    table {
-      color: white;
-      font-size: 12px;
-    }
-
-    td.green {
-      color: green;
-    }
-
-    td.red {
-      color: red;
-    }
-
-    .table-container > div {
-      flex-grow: 1;
-    }
-    .side {
-      width: 100%;
-      height: 33%;
-    }
-    select{
-      color: black;
-    }
-
   </style>
-  <script>
-    document.addEventListener("DOMContentLoaded", function(){
-      var tabList = [].slice.call(document.querySelectorAll("#myTab a #myTab1"));
-      tabList.forEach(function(tab){
-        var tabTrigger = new bootstrap.Tab(tab);
-
-        tab.addEventListener("click", function(event){
-          event.preventDefault();
-          tabTrigger.show();
-        });
-      });
-    });
-  </script>
 </head>
-<body>
+<body style="background-color: #02221f">
 <nav class="d-flex justify-content-between align-items-center p-2">
-  <div class="d-flex justify-content-between align-items-center nav-logo" style="width: 40%">
-    <div class="d-flex align-items-center">
-      <img id="nav-logo-img" src="${pageContext.request.contextPath}/images/hyperliquid1.gif">
-      <h3 style="margin-left: 5px;font-family: 'Libre Baskerville';">Wallet<h3 style="font-style: italic;font-family: 'Libre Baskerville'">liquid</h3></h3>
+    <div class="d-flex justify-content-between align-items-center nav-logo nav-brand">
+        <div class="d-flex align-items-center">
+            <img id="nav-logo-img" src="${pageContext.request.contextPath}/images/hyperliquid1.gif">
+            <h3>Wallet<h3 style="font-style: italic;">liquid</h3></h3>
+        </div>
+        <a href="/leaderboard" class="text-muted text-decoration-none" ><h5>Leaderboard</h5></a>
+        <a href="/history/${user.id}" class="text-muted text-decoration-none" ><h5>Trade History</h5></a>
     </div>
-    <a href="/leaderboard" class="text-muted text-decoration-none" ><h5>Leaderboard</h5></a>
-    <a href="/history/${user.id}" class="text-muted text-decoration-none" ><h5>Trade History</h5></a>
-  </div>
-  <div class="d-flex w-25 justify-content-around">
-    <h3>Welcome ${user.firstName}</h3>
-    <img src="${pageContext.request.contextPath}${user.image}" alt="Not found" width="50px" height="50px" style="background-color: white; border: white 2px solid"/>
-    <a href="/logout"><button class="p-2 nav-btn">Log out</button></a>
-  </div>
+    <div class="d-flex nav-brand justify-content-around">
+      <h3>Welcome ${user.firstName}</h3>
+      <img src="${pageContext.request.contextPath}${user.image}" alt="Not found" width="50px" height="50px" style="background-color: transparent"/>
+      <a href="/edit/${user.id}"><button class="p-2 nav-btn">Edit Profile</button></a>
+      <a href="/logout"><button class="p-2 nav-btn">Log out</button></a>
+    </div>
 </nav>
-<div style="margin: 2%;padding: 1%">
-  <div class="d-flex">
-    <div class="col-6">
-      <div class="d-flex justify-content-between align-items-center w-100" style="border: white 1px solid; border-radius: 0.5rem;padding: 2%;">
-        <div>
-          <form method="post" action="/elaborate">
+
+<div class="trading-container special-green">
+  <div class="d-flex special-green">
+    <div class="col-6 special-green">
+      <div class="d-flex justify-content-between align-items-center w-100 mini-nav special-green">
+        <div class="special-green">
+          <form method="post" class="special-green" action="/elaborate">
             <select name="symbol" id="symbolSelect">
               <option value="BTC" ${symbol == 'BTC' ? 'selected' : ''}>BTC / USD</option>
               <option value="ETH" ${symbol == 'ETH' ? 'selected' : ''}>ETH / USD</option>
@@ -115,74 +55,48 @@
               <option value="XRP" ${symbol == 'XRP' ? 'selected' : ''}>XRP / USD</option>
               <option value="UNI" ${symbol == 'UNI' ? 'selected' : ''}>UNI / USD</option>
             </select>
-            <button type="submit">Go</button>
+            <button class="nav-btn" type="submit">Go</button>
           </form>
         </div>
-        <div class="tokens" >
-          <div class="tokens-slide">
-            <span>BTC-USD</span>
-            <span class="text-muted">${bitcoinPrice}</span>
-            <span>ETH-USD</span>
-            <span class="text-muted">${ethereumPrice}</span>
-            <span>UNI-USD</span>
-            <span class="text-muted">${uniswapPrice}</span>
-            <span>XRP-USD</span>
-            <span class="text-muted">${ripplePrice}</span>
-            <span>LINK-USD</span>
-            <span class="text-muted" style="margin-right: 7px">${chainlinkPrice}</span>
-          </div>
-          <div class="tokens-slide">
-            <span>BTC-USD</span>
-            <span class="text-muted">${bitcoinPrice}</span>
-            <span>ETH-USD</span>
-            <span class="text-muted">${ethereumPrice}</span>
-            <span>UNI-USD</span>
-            <span class="text-muted">${uniswapPrice}</span>
-            <span>XRP-USD</span>
-            <span class="text-muted">${ripplePrice}</span>
-            <span>LINK-USD</span>
-            <span class="text-muted" style="margin-right: 7px">${chainlinkPrice}</span>
-          </div>
+        <!-- TradingView Widget BEGIN -->
+        <div class="tradingview-widget-container w-75">
+          <div class="tradingview-widget-container__widget"></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+            {
+              "symbols": [
+              {
+                "description": "BTC - USD",
+                "proName": "BINANCE:BTCUSD"
+              },
+              {
+                "description": "ETH - USD",
+                "proName": "BINANCE:ETHUSD"
+              },
+              {
+                "description": "UNI - USD",
+                "proName": "BINANCE:UNIUSD"
+              },
+              {
+                "description": "XRP - USD",
+                "proName": "BINANCE:XRPUSD"
+              },
+              {
+                "description": "LINK - USD",
+                "proName": "BINANCE:LINKUSD"
+              }
+            ],
+                    "showSymbolLogo": true,
+                    "colorTheme": "dark",
+                    "isTransparent": true,
+                    "displayMode": "adaptive",
+                    "locale": "en"
+            }
+          </script>
         </div>
+        <!-- TradingView Widget END -->
       </div>
-      <style>
-        @keyframes slide {
-          from{
-            transform: translateX(0%);
-          }
-          to{
-            transform: translateX(-100%);
-          }
-        }
-
-        .tokens{
-          display: flex;
-          overflow: hidden;
-          padding: 1%;
-          background-color: black;
-          color: white;
-          white-space: nowrap;
-        }
-
-        .tokens:hover .tokens-slide{
-          animation-play-state:paused;
-        }
-
-        .tokens-slide{
-          animation: 10s slide infinite linear;
-          white-space: nowrap; /* Prevent text wrapping */
-        }
-
-        .tokens-slide span {
-          display: inline-block;
-          padding: 0% 0.125%;
-          text-overflow: fade; /* Add ellipsis (...) to indicate hidden text */
-        }
-      </style>
-      <div class="tradingview-widget-container row w-100">
-        <div id="tradingview_6184e"></div>
-        <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
-
+      <div class="tradingview-widget-container row w-100" style="margin-top: 2%">
+        <div id="tradingview_6184e" class="special-green"></div>
         <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
         <script type="text/javascript">
           function updateSymbol() {
@@ -194,8 +108,11 @@
               "theme": "dark",
               "style": "1",
               "locale": "en",
+              "hide_volume": true,
               "toolbar_bg": "#f1f3f6",
               "enable_publishing": false,
+              "backgroundColor": "#222",
+              "gridColor": "#0f2e29",
               "save_image": false,
               "container_id": "tradingview_6184e"
             });
@@ -203,12 +120,48 @@
           updateSymbol();
         </script>
       </div>
-
+      <div>
+        <!-- TradingView Widget BEGIN -->
+        <div class="tradingview-widget-container">
+          <div class="tradingview-widget-container__widget"></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
+            {
+              "symbols": [
+              {
+                "description": "BItcoin",
+                "proName": "BINANCE:BTCUSDT"
+              },
+              {
+                "description": "Ethereum",
+                "proName": "BINANCE:ETHUSDT"
+              },
+              {
+                "description": "Uniswap",
+                "proName": "BINANCE:UNIUSDT"
+              },
+              {
+                "description": "Ripple",
+                "proName": "BINANCE:XRPUSDT"
+              },
+              {
+                "description": "Chainlink",
+                "proName": "BINANCE:LINKUSDT"
+              }
+            ],
+                    "colorTheme": "dark",
+                    "isTransparent": true,
+                    "showSymbolLogo": true,
+                    "locale": "en"
+            }
+          </script>
+        </div>
+        <!-- TradingView Widget END -->
+      </div>
     </div>
 
-    <div class="col-3" style="height: 550px;border: 1px solid white; border-radius: 0.5rem; padding: 1%;height: min-content;">
-      <p>Order Book</p>
-      <div>
+    <div class="col-3 special-green" style="border: 1px solid #97fce4; border-radius: 0.5rem;" >
+      <p style="color: white">Order Book</p>
+      <div class="orderbook special-darkgreen">
         <section class="side">
           <table class="w-100">
             <thead>
@@ -235,7 +188,7 @@
           </table>
         </section>
       </div>
-      <div>
+      <div class="orderbook special-darkgreen">
         <section class="side">
           <table class="w-100">
             <thead>
@@ -263,9 +216,9 @@
         </section>
       </div>
 
-      <div>
-        <p>Trade History</p>
-        <section class="side">
+      <div class="special-green">
+        <p style="color: white; margin-top: 2%">Trade History</p>
+        <section class="side tradehistory special-darkgreen">
           <table class="w-100">
             <thead>
             <tr>
@@ -293,35 +246,49 @@
       </div>
     </div>
 
-    <div class="col-3" style="border: 1px solid white; border-radius: 0.5rem; padding: 2%;height: min-content">
+    <div class="col-3 special-darkgreen" style="border: #97fce4 1px solid; border-radius: 0.5rem">
+
+      <script>
+        document.addEventListener("DOMContentLoaded", function(){
+          var tabList = [].slice.call(document.querySelectorAll("#myTab a #myTab1"));
+          tabList.forEach(function(tab){
+            var tabTrigger = new bootstrap.Tab(tab);
+
+            tab.addEventListener("click", function(event){
+              event.preventDefault();
+              tabTrigger.show();
+            });
+          });
+        });
+      </script>
 
       <ul class="nav nav-pills" id="myTab">
         <li class="nav-item"><a class="nav-link active" href="#market" data-bs-toggle="pill">Market</a></li>
         <li class="nav-item"><a class="nav-link" href="#limit" data-bs-toggle="pill">Limit</a></li>
       </ul>
-      <div class="tab-content">
-        <div class="tab-pane fade show active" id="market">
+      <div class="tab-content special-darkgreen">
+        <div class="tab-pane fade show active special-darkgreen" id="market">
           <form:form action="/marketorder" method="post" modelAttribute="transactionMarket">
-            <div class="row" style="padding: 2%;margin-top: 2%; border-radius: 0.5rem; border: white 1px solid">
-              <form:select path="direction" cssClass="toggle-dropdown">
+            <div class="row special-darkgreen" style="padding: 2%;margin-top: 5%;">
+              <form:select path="direction" cssClass="toggle-dropdown special-green" cssStyle="color: white; padding: 1%;border: 1px solid #97fce4;border-radius: 0.5rem;">
                 <form:option value="long" label="Long" />
                 <form:option value="short" label="Short" />
               </form:select>
             </div>
-            <div class="row" style="padding: 2%">
+            <div class="row special-darkgreen" style="padding: 2%">
               <p><form:label path="amount">Amount: </form:label></p>
-              <form:errors path="amount"/>
-              <form:input type="number" path="amount"></form:input>
+              <form:errors path="amount" cssStyle="color: white"/>
+              <form:input type="number" cssClass="special-green" cssStyle="color: white; border: 1px solid #97fce4;border-radius: 0.5rem; padding: 1%" path="amount"></form:input>
             </div>
-            <div class="row">
-              <div class="d-flex">
+            <div class="row special-darkgreen">
+              <div class="d-flex special-darkgreen">
                 <p style="margin-right: 5%"><form:label path="leverage">Leverage: </form:label></p>
-                <div id="sliderValue"></div>
+                <div id="sliderValue" class="special-darkgreen"></div>
               </div>
               <form:errors path="leverage"></form:errors>
               <form:input path="leverage" type="range" id="leverageSlider" name="leverage" min="1" max="100" step="1" onchange="updateValue(this.value)" />
             </div>
-            <div class="row" style="padding: 2%">
+            <div class="row special-darkgreen" style="padding: 2%">
               <p><b>Current Price: </b><span id="currentPrice"></span></p>
               <p><b>Liquidation Price: </b><span id="liquidationPrice"></span></p>
               <p><b>Portfolio: </b>${user.usd} USD</p>
@@ -329,7 +296,7 @@
             <form:hidden path="price" id="currentPriceInput" name="currentPrice" />
             <form:hidden path="symbol" value="${symbol}" />
 
-            <input type="submit" class="btn btn-primary w-100" style="margin-top: 5%" value="Place Order"/>
+            <input type="submit" class="nav-btn p-2 w-100" style="margin-top: 5%" value="Place Order"/>
           </form:form>
           <script>
             function updateValue(value) {
@@ -391,35 +358,33 @@
             document.addEventListener("DOMContentLoaded", updateLiquidationPrice);
             document.addEventListener("DOMContentLoaded", getEntryPrice);
           </script>
-          <div class="card" style="width: 100%; margin-top: 8%">
-            <div class="card-body bg-warning">
-              <h5 class="card-title">ATTENTION</h5>
+          <div class="card" style="width: 100%; margin-top: 8%; border: 1px yellow solid;border-radius: 0.5rem;">
+            <div class="card-body special-green" style="border-radius: 0.5rem">
+              <h5 class="card-title"><img src="${pageContext.request.contextPath}/images/warning.png" width="50px" height="50px"> ATTENTION</h5>
               <h6 class="card-subtitle mb-2 text-muted">Please Read</h6>
               <p class="card-text">Before placing or closing any order, reload the page, in order to get the updated data. Thanks for understanding</p>
             </div>
           </div>
-
-          </div>
         </div>
-        <div class="tab-pane fade" id="limit" >
-          <h1>Coming Soon...</h1>
+        <div class="tab-pane fade" id="limit">
+          <h1 style="color: white; margin-top: 2% ">Coming Soon...</h1>
         </div>
       </div>
-
     </div>
   </div>
+</div>
 
-  <div class="m-4 p-4" >
-    <ul class="nav nav-pills" id="myTab1">
+<div class="trading-container special-green">
+    <ul class="nav nav-pills" id="myTab1" style="margin-bottom: 1%">
       <li class="nav-item"><a class="nav-link active" href="#positions" data-bs-toggle="pill">Positions</a></li>
       <li class="nav-item"><a class="nav-link" href="#orders" data-bs-toggle="pill">Orders</a></li>
       <li class="nav-item"><a class="nav-link" href="#trades" data-bs-toggle="pill">Trades</a></li>
     </ul>
-    <div class="tab-content">
+    <div class="tab-content special-darkgreen">
       <div class="tab-pane fade show active" id="positions" >
         <div>
           <section class="side">
-            <table class="w-100">
+            <table class="table" style="color: white">
               <thead>
               <tr>
                 <th scope="col">Pair</th>
@@ -437,10 +402,10 @@
               <c:forEach var="transaction" items="${openOrders}">
                 <tr>
                   <c:if test="${transaction.direction == 'long'}">
-                    <td class="text-success">${transaction.symbol}-USD</td>
+                    <td class="green">${transaction.symbol}-USD</td>
                   </c:if>
                   <c:if test="${transaction.direction == 'short'}">
-                    <td class="text-danger">${transaction.symbol}-USD</td>
+                    <td class="red">${transaction.symbol}-USD</td>
                   </c:if>
                   <td>${transaction.tokenSize} ${transaction.symbol}</td>
                   <td>${transaction.amount*transaction.leverage}$</td>
@@ -466,13 +431,13 @@
                       <c:if test="${transaction.price >= bitcoinPrice}">
                         <c:set var="difference" value="${transaction.price - bitcoinPrice}" />
                         <c:set var="percentage" value="${(difference / bitcoinPrice) * 100}" />
-                        <td class="text-success">+${transaction.tokenSize * difference}
+                        <td class="green">+${transaction.tokenSize * difference}
                           (+<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                       <c:if test="${transaction.price < bitcoinPrice}">
                         <c:set var="difference" value="${transaction.price - bitcoinPrice}" />
                         <c:set var="percentage" value="${(difference / bitcoinPrice) * 100}" />
-                        <td class="text-danger">${transaction.tokenSize * difference}
+                        <td class="red">${transaction.tokenSize * difference}
                           (<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                     </c:if>
@@ -480,13 +445,13 @@
                       <c:if test="${transaction.price <= bitcoinPrice}">
                         <c:set var="difference" value="${bitcoinPrice - transaction.price}" />
                         <c:set var="percentage" value="${(difference / bitcoinPrice) * 100}" />
-                        <td class="text-success">+${transaction.tokenSize * difference}
+                        <td class="green">+${transaction.tokenSize * difference}
                           (+<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                       <c:if test="${transaction.price > bitcoinPrice}">
                         <c:set var="difference" value="${bitcoinPrice - transaction.price}" />
                         <c:set var="percentage" value="${(difference / bitcoinPrice) * 100}" />
-                        <td class="text-danger">${transaction.tokenSize * difference}
+                        <td class="red">${transaction.tokenSize * difference}
                           (<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                     </c:if>
@@ -496,13 +461,13 @@
                       <c:if test="${transaction.price >= ethereumPrice}">
                         <c:set var="difference" value="${transaction.price - ethereumPrice}" />
                         <c:set var="percentage" value="${(difference / ethereumPrice) * 100}" />
-                        <td class="text-success">+${transaction.tokenSize * difference}
+                        <td class="green">+${transaction.tokenSize * difference}
                           (+<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                       <c:if test="${transaction.price < ethereumPrice}">
                         <c:set var="difference" value="${transaction.price - ethereumPrice}" />
                         <c:set var="percentage" value="${(difference / ethereumPrice) * 100}" />
-                        <td class="text-danger">${transaction.tokenSize * difference}
+                        <td class="red">${transaction.tokenSize * difference}
                           (<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                     </c:if>
@@ -510,13 +475,13 @@
                       <c:if test="${transaction.price <= ethereumPrice}">
                         <c:set var="difference" value="${ethereumPrice - transaction.price}" />
                         <c:set var="percentage" value="${(difference / ethereumPrice) * 100}" />
-                        <td class="text-success">+${transaction.tokenSize * difference}
+                        <td class="green">+${transaction.tokenSize * difference}
                           (+<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                       <c:if test="${transaction.price > ethereumPrice}">
                         <c:set var="difference" value="${ethereumPrice - transaction.price}" />
                         <c:set var="percentage" value="${(difference / ethereumPrice) * 100}" />
-                        <td class="text-danger">${transaction.tokenSize * difference}
+                        <td class="red">${transaction.tokenSize * difference}
                           (<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                     </c:if>
@@ -526,13 +491,13 @@
                       <c:if test="${transaction.price >= uniswapPrice}">
                         <c:set var="difference" value="${transaction.price - uniswapPrice}" />
                         <c:set var="percentage" value="${(difference / uniswapPrice) * 100}" />
-                        <td class="text-success">+${transaction.tokenSize * difference}
+                        <td class="green">+${transaction.tokenSize * difference}
                           (+<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                       <c:if test="${transaction.price < uniswapPrice}">
                         <c:set var="difference" value="${transaction.price - uniswapPrice}" />
                         <c:set var="percentage" value="${(difference / uniswapPrice) * 100}" />
-                        <td class="text-danger">${transaction.tokenSize * difference}
+                        <td class="red">${transaction.tokenSize * difference}
                           (<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                     </c:if>
@@ -540,13 +505,13 @@
                       <c:if test="${transaction.price <= uniswapPrice}">
                         <c:set var="difference" value="${uniswapPrice - transaction.price}" />
                         <c:set var="percentage" value="${(difference / uniswapPrice) * 100}" />
-                        <td class="text-success">+${transaction.tokenSize * difference}
+                        <td class="green">+${transaction.tokenSize * difference}
                           (+<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                       <c:if test="${transaction.price > uniswapPrice}">
                         <c:set var="difference" value="${uniswapPrice - transaction.price}" />
                         <c:set var="percentage" value="${(difference / uniswapPrice) * 100}" />
-                        <td class="text-danger">${transaction.tokenSize * difference}
+                        <td class="red">${transaction.tokenSize * difference}
                           (<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                     </c:if>
@@ -556,13 +521,13 @@
                       <c:if test="${transaction.price >= ripplePrice}">
                         <c:set var="difference" value="${transaction.price - ripplePrice}" />
                         <c:set var="percentage" value="${(difference / ripplePrice) * 100}" />
-                        <td class="text-success">+${transaction.tokenSize * difference}
+                        <td class="green">+${transaction.tokenSize * difference}
                           (+<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                       <c:if test="${transaction.price < ripplePrice}">
                         <c:set var="difference" value="${transaction.price - ripplePrice}" />
                         <c:set var="percentage" value="${(difference / ripplePrice) * 100}" />
-                        <td class="text-danger">${transaction.tokenSize * difference}
+                        <td class="red">${transaction.tokenSize * difference}
                           (<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                     </c:if>
@@ -570,13 +535,13 @@
                       <c:if test="${transaction.price <= ripplePrice}">
                         <c:set var="difference" value="${ripplePrice - transaction.price}" />
                         <c:set var="percentage" value="${(difference / ripplePrice) * 100}" />
-                        <td class="text-success">+${transaction.tokenSize * difference}
+                        <td class="green">+${transaction.tokenSize * difference}
                           (+<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                       <c:if test="${transaction.price > ripplePrice}">
                         <c:set var="difference" value="${ripplePrice - transaction.price}" />
                         <c:set var="percentage" value="${(difference / ripplePrice) * 100}" />
-                        <td class="text-danger">${transaction.tokenSize * difference}
+                        <td class="red">${transaction.tokenSize * difference}
                           (<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                     </c:if>
@@ -586,13 +551,13 @@
                       <c:if test="${transaction.price >= chainlinkPrice}">
                         <c:set var="difference" value="${transaction.price - chainlinkPrice}" />
                         <c:set var="percentage" value="${(difference / chainlinkPrice) * 100}" />
-                        <td class="text-success">+${transaction.tokenSize * difference}
+                        <td class="green">+${transaction.tokenSize * difference}
                           (+<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                       <c:if test="${transaction.price < chainlinkPrice}">
                         <c:set var="difference" value="${transaction.price - chainlinkPrice}" />
                         <c:set var="percentage" value="${(difference / chainlinkPrice) * 100}" />
-                        <td class="text-danger">${transaction.tokenSize * difference}
+                        <td class="red">${transaction.tokenSize * difference}
                           (<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                     </c:if>
@@ -600,13 +565,13 @@
                       <c:if test="${transaction.price <= chainlinkPrice}">
                         <c:set var="difference" value="${chainlinkPrice - transaction.price}" />
                         <c:set var="percentage" value="${(difference / chainlinkPrice) * 100}" />
-                        <td class="text-success">+${transaction.tokenSize * difference}
+                        <td class="green">+${transaction.tokenSize * difference}
                           (+<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                       <c:if test="${transaction.price > chainlinkPrice}">
                         <c:set var="difference" value="${chainlinkPrice - transaction.price}" />
                         <c:set var="percentage" value="${(difference / chainlinkPrice) * 100}" />
-                        <td class="text-danger">${transaction.tokenSize * difference}
+                        <td class="red">${transaction.tokenSize * difference}
                           (<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                     </c:if>
@@ -634,8 +599,7 @@
                       </c:when>
                     </c:choose>
 
-                    <a href="/closemarket/${transaction.id}?traLastPrice=${lastPrice}"><button class="btn btn-primary">Market Close</button></a>
-                    <button class="btn btn-primary" disabled>Limit Close</button>
+                    <a href="/closemarket/${transaction.id}?traLastPrice=${lastPrice}"><button class="nav-btn p-2">Market Close</button></a>
                   </td>
                 </tr>
               </c:forEach>
@@ -649,7 +613,7 @@
       </div>
       <div class="tab-pane fade" id="trades">
         <section class="side">
-          <table class="w-100">
+          <table class="table" style="color: white">
             <thead>
             <tr>
               <th scope="col">Pair</th>
@@ -662,28 +626,27 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach var="transaction" items="${closedOrders}">
-              <tr>
-                <c:if test="${transaction.direction == 'long'}">
-                  <td class="text-success">${transaction.symbol}-USD</td>
-                </c:if>
-                <c:if test="${transaction.direction == 'short'}">
-                  <td class="text-danger">${transaction.symbol}-USD</td>
-                </c:if>
-                <td>${transaction.tokenSize} ${transaction.symbol}</td>
-                <td>${transaction.amount}</td>
-                <td>${transaction.leverage}</td>
-                <td>${transaction.price}</td>
-                <td>${transaction.lastPrice}</td>
-                <td class="${transaction.earnings >= 0 ? 'text-success' : 'text-danger'}">${transaction.earnings}</td>
-              </tr>
-            </c:forEach>
+              <c:forEach var="transaction" items="${closedOrders}">
+                <tr>
+                  <c:if test="${transaction.direction == 'long'}">
+                    <td class="text-success" style="padding: 1%">${transaction.symbol}-USD</td>
+                  </c:if>
+                  <c:if test="${transaction.direction == 'short'}">
+                    <td class="text-danger" style="padding: 1%">${transaction.symbol}-USD</td>
+                  </c:if>
+                  <td style="padding: 1%">${transaction.tokenSize} ${transaction.symbol}</td>
+                  <td style="padding: 1%">${transaction.amount}</td>
+                  <td style="padding: 1%">${transaction.leverage}</td>
+                  <td style="padding: 1%">${transaction.price}</td>
+                  <td style="padding: 1%">${transaction.lastPrice}</td>
+                  <td style="padding: 1%" class="${transaction.earnings >= 0 ? 'text-success' : 'text-danger'}">${transaction.earnings}</td>
+                </tr>
+              </c:forEach>
             </tbody>
           </table>
         </section>
       </div>
     </div>
-  </div>
 </div>
 </body>
 </html>

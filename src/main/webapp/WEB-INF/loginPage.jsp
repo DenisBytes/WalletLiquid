@@ -12,10 +12,12 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <title>Login Page</title>
 </head>
-<body style="background-color: #283454; color: white">
+<body>
 <style>
   body{
     overflow: hidden;
+    background-color: #283454;
+    color: white;
   }
 
   .signup-form{
@@ -45,18 +47,49 @@
     font-size: 17px;
   }
 
+  .outside{
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    margin: 8% auto;
+  }
+
+  .inside{
+    display: flex;
+    width: 50%;
+  }
+
+  .left{
+    width: 50%;
+    background-color: #fafafb;
+    color: black;
+  }
+
+  .right{
+    width: 50%;
+    position: relative;
+    bottom: 2px;
+  }
+
+  #signup{
+    height: auto;
+  }
+  #signin{
+    height: 450px;
+  }
+
 </style>
 
-<div style="display: flex; justify-content: center; align-items:center; margin: 8% auto;">
-  <div style="display: flex; width: 50%">
-    <div style="width: 50%;background-color: #fafafb; color: black">
+<div class="outside">
+  <div class="inside" style="width: 1000px">
+    <div class="left">
       <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#home">Sign up</a></li>
-        <li><a data-toggle="tab" href="#menu1">Sign In</a></li>
+        <li class="active"><a data-toggle="tab" href="#signup">Sign up</a></li>
+        <li><a data-toggle="tab" href="#signin">Sign In</a></li>
       </ul>
 
       <div class="tab-content">
-        <div id="home" class="tab-pane fade in active" style="height: auto;">
+        <div id="signup" class="tab-pane fade in active" style="height: 500px;">
           <form:form action="/register" method="post" modelAttribute="newUser">
             <span class="signup-form">
               <c:if test="${logoutMessage != null}">
@@ -68,21 +101,21 @@
               </c:if>
             </span>
             <div class="form-wrapper">
-              <div>
+              <div style="display: flex">
                 <p>First Name:</p>
                 <p><form:errors path="firstName" class="text-danger"/></p>
               </div>
               <p><form:input class="input" path="firstName"/></p>
             </div>
             <div class="form-wrapper">
-              <div>
+              <div style="display: flex">
                 <p class="float-left">Last Name:</p>
                 <p><form:errors path="lastName" class="text-danger"/></p>
               </div>
               <p class="float-left"><form:input class="input" path="lastName"/></p>
             </div>
             <div class="form-wrapper">
-              <div>
+              <div style="display: flex">
                 <p class="float-left">Email:</p>
                 <p><form:errors path="email" class="text-danger"/></p>
               </div>
@@ -90,7 +123,7 @@
             </div>
 
             <div class="form-wrapper">
-              <div>
+              <div style="display: flex">
                 <p class="float-left">Password:</p>
                 <p><form:errors path="password" class="text-danger"/></p>
               </div>
@@ -108,10 +141,11 @@
             </div>
           </form:form>
         </div>
-        <div id="menu1" class="tab-pane fade" style="height: 450px">
-          <form:form action="/login" method="post" modelAttribute="newLogin">
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-            <span class="signup-form">
+        <div id="signin" class="tab-pane fade" style="height: 500px;">
+          <div style="align-items: center; height: 100%">
+            <form:form action="/login" method="post" modelAttribute="newLogin">
+              <!--<input type="hidden" name="$ {_csrf.parameterName}" value="$ {_csrf.token}"/>-->
+              <span class="signup-form">
               <c:if test="${logoutMessage != null}">
                 <c:out value="${logoutMessage}"></c:out>
               </c:if>
@@ -120,28 +154,29 @@
                 <c:out value="${errorMessage}"></c:out>
               </c:if>
             </span>
-            <div class="form-wrapper">
-              <h4 class="float-left">Email:</h4>
-              <h4 class="float-left"><form:input class="input" path="email"/></h4>
-            </div>
-            <div class="form-wrapper">
-              <h4><form:errors path="email" class="text-danger"/></h4>
-            </div>
-            <div class="form-wrapper">
-              <h4 class="float-left">Password:</h4>
-              <h4 class="float-left"><form:input class="input" path="password" type="password"/></h4>
-            </div>
-            <div class="form-wrapper">
-              <h4><form:errors path="password" class="text-danger"/></h4>
-            </div>
-            <div class="form-wrapper form-button">
-              <input class="button" type="submit" value="Submit"/>
-            </div>
-          </form:form>
+              <div class="form-wrapper">
+                <h4 class="float-left">Email:</h4>
+                <h4 class="float-left"><form:input class="input" path="email"/></h4>
+              </div>
+              <div class="form-wrapper">
+                <h4><form:errors path="email" class="text-danger"/></h4>
+              </div>
+              <div class="form-wrapper">
+                <h4 class="float-left">Password:</h4>
+                <h4 class="float-left"><form:input class="input" path="password" type="password"/></h4>
+              </div>
+              <div class="form-wrapper">
+                <h4><form:errors path="password" class="text-danger"/></h4>
+              </div>
+              <div class="form-wrapper form-button">
+                <input class="button" type="submit" value="Submit"/>
+              </div>
+            </form:form>
+          </div>
         </div>
       </div>
     </div>
-    <div style="width: 50%; position: relative; bottom: 2px">
+    <div class="right">
       <img src="${pageContext.request.contextPath}/images/walletLogin.gif" width="100%%" height="100%">
     </div>
   </div>

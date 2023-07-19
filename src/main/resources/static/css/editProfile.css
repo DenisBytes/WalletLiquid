@@ -1,0 +1,63 @@
+.nav-brand{
+    width: 35%;
+}
+
+
+nav{
+    background-color: black;
+    width: 100%;
+}
+
+#nav-logo-img{
+    padding: 0% 2%;
+    width: 75px;
+    height: 75px;
+}
+.nav-logo{
+    color: white;
+}
+
+.nav-btn{
+    background-color: blue;
+    color: white;
+    border-radius: 5%;
+    border: 1px solid blue;
+
+}
+
+body {
+    background-color: white;
+    color: white;
+}
+
+main{
+    background-color: black;
+    border-radius: 0.5rem;
+}
+
+h2 {
+    color: white;
+}
+
+div{background-color: black;
+
+}
+table {
+    color: white;
+    font-size: 12px;
+}
+
+.table-container > div {
+    flex-grow: 1;
+}
+
+th{
+    color: white;
+}
+td{
+    color: white;
+}
+table{
+    align-items: center;
+    text-align: center;
+}

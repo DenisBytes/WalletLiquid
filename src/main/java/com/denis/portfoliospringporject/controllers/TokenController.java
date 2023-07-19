@@ -39,7 +39,7 @@ public class TokenController {
     @Autowired
     TypeService typeService;
 
-    @GetMapping("/index")
+    @RequestMapping(value = {"/","/index"})
     public String index(Model model, HttpSession session) {
 
         session.setAttribute("loggedInUserID", null);
@@ -120,11 +120,14 @@ public class TokenController {
     public String showOrderBook(Model model, HttpSession session) {
 
         if (session.getAttribute("loggedInUserID") == null){
+            System.out.println("HELLO NOT WORKING");
             return "redirect:/login";
         }
 
         User user = userService.findById((Long) session.getAttribute("loggedInUserID"));
         model.addAttribute("user", user);
+
+        System.out.println(user.getImage());
 
         Transaction transactionMarket = new Transaction();
         Transaction transactionLimit = new Transaction();
@@ -282,7 +285,6 @@ public class TokenController {
     }
 
 
-
     @PostMapping("/elaborate")
     public String trade(@RequestParam String symbol, HttpSession session) {
 
@@ -297,11 +299,12 @@ public class TokenController {
         if(session.getAttribute("loggedInUserID") == null){
             return "redirect:/login";
         }
-        if(result.hasErrors()){
-            return "trade";
-        }
 
         User user = userService.findById((Long) session.getAttribute("loggedInUserID"));
+
+        if(result.hasErrors() || transactionMarket.getAmount() > user.getUsd()){
+            return "redirect:/trade";
+        }
 
         Type t = typeService.findByName("open");
 
@@ -346,7 +349,7 @@ public class TokenController {
         System.out.println("tran earnings: "+transaction.getEarnings());
 
         user.setUsd(user.getUsd() +transaction.getEarnings());
-        userService.upgradeUser(user);
+        userService.updateUser(user);
         transactionService.saveTransaction(transaction);
 
         return "redirect:/trade";
@@ -371,7 +374,7 @@ public class TokenController {
         User user = userService.findById((Long) session.getAttribute("loggedInUserID"));
 
         user.setUsd(user.getUsd()+transaction.getEarnings());
-        userService.upgradeUser(user);
+        userService.updateUser(user);
         transactionService.saveTransaction(transaction);
 
         return "redirect:/trade";

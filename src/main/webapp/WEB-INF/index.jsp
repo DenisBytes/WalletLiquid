@@ -20,32 +20,74 @@
         <h3 style="margin-left: 5px;font-family: 'Libre Baskerville';">Wallet<h3 style="font-style: italic;font-family: 'Libre Baskerville'">liquid</h3></h3>
     </div>
     <div class="nav-container">
-        <div class="tokens">
-            <div class="tokens-slide">
-                <c:forEach var="token" items="${tokens}">
-                    <span style="margin-left: 1%;">${token.symbol}-USD</span>
-                    <span>${token.tokenPriceUSD}</span>
-                    <c:if test="${token.priceChange24h < 0}">
-                        <span class="text-danger" style="margin-right: 1%">${token.priceChange24h}%</span>
-                    </c:if>
-                    <c:if test="${token.priceChange24h > 0}">
-                        <span class="text-success" style="margin-right: 1%">${token.priceChange24h}%</span>
-                    </c:if>
-                </c:forEach>
-            </div>
-            <div class="tokens-slide">
-                <c:forEach var="token" items="${tokens}">
-                    <span style="margin-left: 1%;">${token.symbol}-USD</span>
-                    <span>${token.tokenPriceUSD}</span>
-                    <c:if test="${token.priceChange24h < 0}">
-                        <span class="text-danger" style="margin-right: 1%">${token.priceChange24h}%</span>
-                    </c:if>
-                    <c:if test="${token.priceChange24h > 0}">
-                        <span class="text-success" style="margin-right: 1%">${token.priceChange24h}%</span>
-                    </c:if>
-                </c:forEach>
-            </div>
+        <!-- TradingView Widget BEGIN -->
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+                {
+                    "symbols": [
+                    {
+                        "description": "BTC - USD",
+                        "proName": "BINANCE:BTCUSD"
+                    },
+                    {
+                        "description": "ETH - USD",
+                        "proName": "BINANCE:ETHUSD"
+                    },
+                    {
+                        "description": "UNI - USD",
+                        "proName": "BINANCE:UNIUSD"
+                    },
+                    {
+                        "description": "XRP - USD",
+                        "proName": "BINANCE:XRPUSD"
+                    },
+                    {
+                        "description": "LINK - USD",
+                        "proName": "BINANCE:LINKUSD"
+                    },
+                    {
+                        "description": "HBAR - USD",
+                        "proName": "BINANCE:HBARUSD"
+                    },
+                    {
+                        "description": "NXRA - USD",
+                        "proName": "BITFINEX:NXRAUSD"
+                    },
+                    {
+                        "description": "LYRA - USD",
+                        "proName": "CRYPTO:LYRAUSD"
+                    },
+                    {
+                        "description": "QNT - USD",
+                        "proName": "BINANCE:QNTUSD"
+                    },
+                    {
+                        "description": "LCX - USD",
+                        "proName": "COINBASE:LCXUSD"
+                    },
+                    {
+                        "description": "EWT - USD",
+                        "proName": "KRAKEN:EWTUSD"
+                    },
+                    {
+                        "description": "DAG - USD",
+                        "proName": "CRYPTO:DAGUSD"
+                    },
+                    {
+                        "description": "MNW - USD",
+                        "proName": "CRYPTO:MNWUSD"
+                    }
+                ],
+                    "showSymbolLogo": true,
+                    "colorTheme": "dark",
+                    "isTransparent": true,
+                    "displayMode": "compact",
+                    "locale": "en"
+                }
+            </script>
         </div>
+        <!-- TradingView Widget END -->
     </div>
     <a href="/trade"><button class="p-2 nav-btn">Get Started</button></a>
 </nav>

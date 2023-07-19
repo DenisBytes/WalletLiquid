@@ -1,7 +1,10 @@
 package com.denis.portfoliospringporject.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.Range;
 
 import java.util.Date;
 import java.util.List;
@@ -16,10 +19,12 @@ public class Transaction {
     @Column(name = "`order`")
     private String order;
 
+    @NotBlank(message = "Long or short is required!")
     private String direction;
 
     private String symbol;
 
+    @NotNull(message = "Leverage is required!")
     private int leverage;
 
     private double price;
@@ -28,6 +33,8 @@ public class Transaction {
 
     private double earnings;
 
+    @NotNull(message = "Amount is required!")
+    @Range(min = 1, message = "Amount has to be minimum 1 usd and not bigger than your portfolio")
     private double amount;
 
     private double tokenSize;

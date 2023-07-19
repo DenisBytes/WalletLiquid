@@ -7,88 +7,44 @@
 <html>
 <head>
   <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/usertransactions.css">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
   <style>
-
-    nav{
-      background-color: black;
-      width: 100%;
+    .special-green{
+      background-color: #0f2e29;
     }
-
-    #nav-logo-img{
-      padding: 0% 2%;
-      width: 75px;
-      height: 75px;
+    .special-darkgreen{
+      background-color: #02221f;
     }
-    .nav-logo{
-      color: white;
+    .green{
+      color: #02c903;
     }
-
-    .nav-btn{
-      background-color: blue;
-      color: white;
-      border-radius: 5%;
-      border: 1px solid blue;
-
+    .red{
+      color: #e90c2f;
     }
-
-    body {
-      background-color: white;
-      color: white;
-    }
-    main{
-      background-color: black;
-    }
-
-    h2 {
-      color: white;
-    }
-
-    div{background-color: black;
-
-    }
-    table {
-      color: white;
-      font-size: 12px;
-    }
-
-    .table-container > div {
-      flex-grow: 1;
-    }
-
-    th{
-      color: white;
-    }
-    td{
-      color: white;
-    }
-    table{
-      align-items: center;
-      text-align: center;
-    }
-
   </style>
 </head>
-<body>
+<body class="special-darkgreen">
 <nav class="d-flex justify-content-between align-items-center p-2">
-  <div class="d-flex justify-content-between align-items-center nav-logo" style="width: 40%">
+  <div class="d-flex justify-content-between align-items-center nav-logo nav-brand">
     <div class="d-flex align-items-center">
       <img id="nav-logo-img" src="${pageContext.request.contextPath}/images/hyperliquid1.gif">
-      <h3 style="margin-left: 5px;font-family: 'Libre Baskerville';">Wallet<h3 style="font-style: italic;font-family: 'Libre Baskerville'">liquid</h3></h3>
+      <h3>Wallet<h3 style="font-style: italic;">liquid</h3></h3>
     </div>
     <a href="/trade" class="text-muted text-decoration-none" ><h5>Trade</h5></a>
-    <a href="/history/${currentUser.id}" class="text-muted text-decoration-none" ><h5>Trade History</h5></a>
+    <a href="/leaderboard" class="text-muted text-decoration-none" ><h5>Leaderboard</h5></a>
   </div>
-  <div class="d-flex w-25 justify-content-around">
+  <div class="d-flex nav-brand justify-content-around">
     <h3>Welcome ${currentUser.firstName}</h3>
-    <img src="${pageContext.request.contextPath}${currentUser.image}" alt="Not found" width="50px" height="50px" style="background-color: white; border: white 2px solid"/>
+    <img src="${pageContext.request.contextPath}${currentUser.image}" alt="Not found" width="50px" height="50px"/>
+    <a href="/edit/${currentUser.id}"><button class="p-2 nav-btn">Edit Profile</button></a>
     <a href="/logout"><button class="p-2 nav-btn">Log out</button></a>
   </div>
 </nav>
-<main class="m-4 p-4">
-  <div class="d-flex">
-    <img src="${pageContext.request.contextPath}${user.image}" alt="Not found" width="50px" height="50px" style="background-color: white; border: white 2px solid"/>
-    <h1>${user.firstName} ${user.lastName}</h1>
+<main class="m-4 p-4 special-green">
+  <div class="d-flex justify-content-center special-green" style="margin: 2%">
+    <img src="${pageContext.request.contextPath}/${user.image}" alt="Not found" width="50px" height="50px"/>
+    <h1 style="margin-left: 2%">${user.firstName} ${user.lastName}</h1>
   </div>
   <table class="table">
     <thead>
@@ -105,20 +61,20 @@
         <tr>
           <td>${transaction.createdAt}</td>
           <c:if test="${transaction.direction eq 'long'}">
-            <td class="text-success">${transaction.symbol}-USD</td>
+            <td style="padding: 1%" class="green">${transaction.symbol}-USD</td>
           </c:if>
           <c:if test="${transaction.direction eq 'short'}">
-            <td class="text-danger">${transaction.symbol}-USD</td>
+            <td style="padding: 1%" class="red">${transaction.symbol}-USD</td>
           </c:if>
-          <td>${transaction.amount}</td>
-          <td>${transaction.leverage}x</td>
-          <td>${transaction.price}</td>
-          <td>${transaction.lastPrice}</td>
+          <td style="padding: 1%">${transaction.amount}</td>
+          <td style="padding: 1%">${transaction.leverage}x</td>
+          <td style="padding: 1%">${transaction.price}</td>
+          <td style="padding: 1%">${transaction.lastPrice}</td>
           <c:if test="${transaction.earnings <0}">
-            <td class="text-danger">${transaction.earnings}</td>
+            <td style="padding: 1%" class="green">${transaction.earnings}</td>
           </c:if>
           <c:if test="${transaction.earnings >= 0}">
-            <td class="text-success">${transaction.earnings}</td>
+            <td style="padding: 1%" class="red">${transaction.earnings}</td>
           </c:if>
         </tr>
       </c:forEach>

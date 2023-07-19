@@ -7,99 +7,49 @@
 <html>
 <head>
     <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/leaderboard.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-
-        nav{
-            background-color: black;
-            width: 100%;
+        .special-green{
+            background-color: #0f2e29;
         }
-
-        #nav-logo-img{
-            padding: 0% 2%;
-            width: 75px;
-            height: 75px;
+        .special-darkgreen{
+            background-color: #02221f;
         }
-        .nav-logo{
-            color: white;
-        }
-
-        .nav-btn{
-            background-color: blue;
-            color: white;
-            border-radius: 5%;
-            border: 1px solid blue;
-
-        }
-
-        body {
-            background-color: white;
-            color: white;
-        }
-
-        main{
-            background-color: black;
-
-        }
-
-        h2 {
-            color: white;
-        }
-
-        div{background-color: black;
-
-        }
-        table {
-            color: white;
-            font-size: 12px;
-        }
-
-        .table-container > div {
-            flex-grow: 1;
-        }
-
-        th{
-            color: white;
-        }
-        td{
-            color: white;
-        }
-        table{
-            align-items: center;
-            text-align: center;
-        }
-
     </style>
 </head>
-<body>
+<body class="special-darkgreen">
 <nav class="d-flex justify-content-between align-items-center p-2">
-    <div class="d-flex justify-content-between align-items-center nav-logo" style="width: 40%">
+    <div class="d-flex justify-content-between align-items-center nav-logo nav-brand">
         <div class="d-flex align-items-center">
             <img id="nav-logo-img" src="${pageContext.request.contextPath}/images/hyperliquid1.gif">
-            <h3 style="margin-left: 5px;font-family: 'Libre Baskerville';">Wallet<h3 style="font-style: italic;font-family: 'Libre Baskerville'">liquid</h3></h3>
+            <h3>Wallet<h3 style="font-style: italic;">liquid</h3></h3>
         </div>
         <a href="/trade" class="text-muted text-decoration-none" ><h5>Trade</h5></a>
         <a href="/history/${user.id}" class="text-muted text-decoration-none" ><h5>Trade History</h5></a>
     </div>
-    <div class="d-flex w-25 justify-content-around">
+    <div class="d-flex nav-brand justify-content-around">
         <h3>Welcome ${user.firstName}</h3>
-        <img src="${pageContext.request.contextPath}${user.image}" alt="Not found" width="50px" height="50px" style="background-color: white; border: white 2px solid"/>
+        <img src="${pageContext.request.contextPath}${user.image}" alt="Not found" width="50px" height="50px"/>
+        <a href="/edit/${user.id}"><button class="p-2 nav-btn">Edit Profile</button></a>
         <a href="/logout"><button class="p-2 nav-btn">Log out</button></a>
     </div>
 </nav>
-<main class="m-4 p-4">
+<main class="m-4 p-4 special-green">
     <table class="table">
         <thead>
-        <th scope="col">Rank</th>
-        <th scope="col">User</th>
-        <th scope="col">Portfolio Value</th>
+        <th scope="col" class="col-2">Rank</th>
+        <th scope="col" class="col-2">PFP</th>
+        <th scope="col" class="col-4">User</th>
+        <th scope="col" class="col-4">Portfolio Value</th>
         </thead>
         <tbody>
         <c:forEach var="user" items="${userList}" varStatus="loop">
             <tr>
-                <td>${loop.index + 1}</td>
-                <td><a href="/leaderboard/${user.id}" class="text-decoration-none">${user.firstName} ${user.lastName}</a></td>
-                <td>${user.usd}</td>
+                <td><h4>${loop.index + 1}</h4></td>
+                <td><img src="${pageContext.request.contextPath}/${user.image}" alt="not found" width="25px" height="25px"></td>
+                <td><h4><a href="/leaderboard/${user.id}" class="text-decoration-none">${user.firstName} ${user.lastName}</a></h4></td>
+                <td><h4>${user.usd}</h4></td>
             </tr>
         </c:forEach>
         </tbody>

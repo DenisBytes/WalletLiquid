@@ -26,14 +26,12 @@ public class AuthController {
     @PostMapping("/register")
     public String registerIndex(@Valid @ModelAttribute("newUser")User user,
                                 BindingResult result, Model model, HttpSession session){
-        user.setImage("images/profile.jpg");
-        user.setUsd(100000);
-        userService.register(user,result);
-
         if(result.hasErrors()){
             model.addAttribute("newLogin", new LoginUser());
             return "loginPage";
         }
+        userService.register(user,result);
+
         session.setAttribute("loggedInUserID", user.getId());
 
         return "redirect:/trade";
@@ -57,18 +55,6 @@ public class AuthController {
 
     // We will call this method to automatically log in newly registered users
 
-    @RequestMapping("/admin/{id}")
-    public String makeAdmin(Principal principal, @PathVariable("id") Long id, Model model) {
-        if(principal==null) {
-            return "redirect:/login";
-        }
-
-        User user = userService.findById(id);
-
-        model.addAttribute("users", userService.allUsers());
-
-        return "adminPage";
-    }
 
     @GetMapping("/login")
     public String login(
@@ -88,52 +74,38 @@ public class AuthController {
         return "loginPage";
     }
 
-    @RequestMapping(value={"/", "/home"})
-    public String home(Principal principal, Model model) {
-        if(principal==null) {
-            return "redirect:/login";
-        }
-        String email = principal.getName();
-        User user = userService.findByEmail(email);
-        model.addAttribute("user", user);
-
-        if(user!=null) {
-            user.setLastLogin(new Date());
-            userService.updateUser(user);
-            // If the user is an ADMIN or SUPER_ADMIN they will be redirected to the admin page
-            if (user != null && user.getRoles() != null && !user.getRoles().isEmpty()) {
-                if (user.getRoles().get(0).getName().contains("ROLE_SUPER_ADMIN") || user.getRoles().get(0).getName().contains("ROLE_ADMIN")) {
-                    // Role check logic here
-                }
-                model.addAttribute("currentUser", userService.findByEmail(email));
-                model.addAttribute("users", userService.allUsers());
-                return "adminPage";
-            }
-
-
-        }
-        // All other users are redirected to the home page
-
-        return "trade";
-    }
-
-    @RequestMapping("/delete/{id}")
-    public String deleteUser(Principal principal, @PathVariable("id") Long id, HttpSession session, Model model) {
-        if(principal==null) {
-            return "redirect:/login";
-        }
-        User user = userService.findById(id);
-        userService.deleteUser(user);
-
-        session.invalidate();
-        model.addAttribute("users", userService.allUsers());
-
-        return "redirect:/index";
-    }
 
     @GetMapping("/logout")
     public String logout(HttpSession session){
         session.setAttribute("loggedInUserID", null);
         return "redirect:/index";
     }
+
+    @GetMapping("/edit/{userId}")
+    public String editProfile (@PathVariable (name = "userId") Long userId, HttpSession session, Model model){
+        if(session.getAttribute("loggedInUserID") == null){
+            return "redirect:/login";
+        }
+
+        model.addAttribute("user", userService.findById(userId));
+
+        return "editProfile";
+    }
+
+    @PutMapping("/edit/{userId}")
+    public String editing(@Valid @ModelAttribute("user") User user,
+                          @PathVariable (name = "userId") Long userId,
+                          BindingResult result){
+
+        if (result.hasErrors()){
+            return"editProfile";
+        }
+
+        user.setId(userId);
+        System.out.println(user.getImage());
+        userService.updateUser(user);
+
+        return "redirect:/trade";
+    }
+
 }
