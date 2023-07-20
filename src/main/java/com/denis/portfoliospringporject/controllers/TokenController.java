@@ -44,52 +44,6 @@ public class TokenController {
 
         session.setAttribute("loggedInUserID", null);
 
-        OkHttpClient client = new OkHttpClient().newBuilder().build();
-
-        List<String> desiredSymbols = Arrays.asList("BTC", "ETH", "HBAR", "XDC", "LDO", "CSPR", "MKR", "CRV",
-                "RPL", "ALGO", "QNT", "UNI", "LINK", "XRP", "SNX", "COMP");
-        List<TokenData> tokens = new ArrayList<>();
-
-        try {
-            // Retrieve data from the CoinCap API
-            Request coinCapRequest = new Request.Builder()
-                    .url("https://api.coincap.io/v2/assets")
-                    .build();
-
-            try (Response coinCapResponse = client.newCall(coinCapRequest).execute()) {
-                if (coinCapResponse.isSuccessful()) {
-                    String coinCapResponseBody = coinCapResponse.body().string();
-                    ObjectMapper coinCapObjectMapper = new ObjectMapper();
-                    JsonNode coinCapRoot = coinCapObjectMapper.readTree(coinCapResponseBody);
-                    JsonNode coinCapDataNode = coinCapRoot.path("data");
-
-                    // Iterate over the tokens from CoinCap API
-                    for (JsonNode tokenNode : coinCapDataNode) {
-                        String symbol = tokenNode.path("symbol").asText();
-
-                        // Check if the token symbol is in the specified list
-                        if (desiredSymbols.contains(symbol)) {
-                            String tokenName = tokenNode.path("name").asText();
-                            double tokenPriceUSD = tokenNode.path("priceUsd").asDouble();
-                            double priceChange24h = tokenNode.path("changePercent24Hr").asDouble();
-                            double volume24h = tokenNode.path("volumeUsd24Hr").asDouble();
-
-                            // Retrieve logo from the other API
-                            String logoUrl = getLogoUrl(client, symbol);
-                            TokenData token = new TokenData(symbol, tokenName, tokenPriceUSD, priceChange24h, volume24h, logoUrl);
-                            tokens.add(token);
-                        }
-                    }
-                } else {
-                    // Handle unsuccessful response
-                }
-            }
-
-            model.addAttribute("tokens", tokens);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         return "index";
     }
     private String getLogoUrl(OkHttpClient client, String symbol) throws Exception {

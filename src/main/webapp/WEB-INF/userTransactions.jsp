@@ -37,13 +37,12 @@
   <div class="d-flex nav-brand justify-content-around">
     <h3>Welcome ${currentUser.firstName}</h3>
     <img src="${pageContext.request.contextPath}${currentUser.image}" alt="Not found" width="50px" height="50px"/>
-    <a href="/edit/${currentUser.id}"><button class="p-2 nav-btn">Edit Profile</button></a>
     <a href="/logout"><button class="p-2 nav-btn">Log out</button></a>
   </div>
 </nav>
 <main class="m-4 p-4 special-green">
   <div class="d-flex justify-content-center special-green" style="margin: 2%">
-    <img src="${pageContext.request.contextPath}/${user.image}" alt="Not found" width="50px" height="50px"/>
+    <img src="${pageContext.request.contextPath}${user.image}" alt="Not found" width="50px" height="50px"/>
     <h1 style="margin-left: 2%">${user.firstName} ${user.lastName}</h1>
   </div>
   <table class="table">

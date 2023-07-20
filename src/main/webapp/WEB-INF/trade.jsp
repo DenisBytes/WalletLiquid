@@ -37,7 +37,6 @@
     <div class="d-flex nav-brand justify-content-around">
       <h3>Welcome ${user.firstName}</h3>
       <img src="${pageContext.request.contextPath}${user.image}" alt="Not found" width="50px" height="50px" style="background-color: transparent"/>
-      <a href="/edit/${user.id}"><button class="p-2 nav-btn">Edit Profile</button></a>
       <a href="/logout"><button class="p-2 nav-btn">Log out</button></a>
     </div>
 </nav>
@@ -48,7 +47,7 @@
       <div class="d-flex justify-content-between align-items-center w-100 mini-nav special-green">
         <div class="special-green">
           <form method="post" class="special-green" action="/elaborate">
-            <select name="symbol" id="symbolSelect">
+            <select name="symbol" id="symbolSelect" class="special-darkgreen" style="color:white;">
               <option value="BTC" ${symbol == 'BTC' ? 'selected' : ''}>BTC / USD</option>
               <option value="ETH" ${symbol == 'ETH' ? 'selected' : ''}>ETH / USD</option>
               <option value="LINK" ${symbol == 'LINK' ? 'selected' : ''}>LINK / USD</option>
@@ -111,7 +110,7 @@
               "hide_volume": true,
               "toolbar_bg": "#f1f3f6",
               "enable_publishing": false,
-              "backgroundColor": "#222",
+              "backgroundColor": "#02221f",
               "gridColor": "#0f2e29",
               "save_image": false,
               "container_id": "tradingview_6184e"
@@ -430,13 +429,13 @@
                     <c:if test="${transaction.direction == 'short'}">
                       <c:if test="${transaction.price >= bitcoinPrice}">
                         <c:set var="difference" value="${transaction.price - bitcoinPrice}" />
-                        <c:set var="percentage" value="${(difference / bitcoinPrice) * 100}" />
+                        <c:set var="percentage" value="${(transaction.tokenSize * difference) * 100/transaction.amount}" />
                         <td class="green">+${transaction.tokenSize * difference}
                           (+<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                       <c:if test="${transaction.price < bitcoinPrice}">
                         <c:set var="difference" value="${transaction.price - bitcoinPrice}" />
-                        <c:set var="percentage" value="${(difference / bitcoinPrice) * 100}" />
+                        <c:set var="percentage" value="${(transaction.tokenSize * difference) * 100/transaction.amount}" />
                         <td class="red">${transaction.tokenSize * difference}
                           (<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
@@ -444,13 +443,13 @@
                     <c:if test="${transaction.direction == 'long'}">
                       <c:if test="${transaction.price <= bitcoinPrice}">
                         <c:set var="difference" value="${bitcoinPrice - transaction.price}" />
-                        <c:set var="percentage" value="${(difference / bitcoinPrice) * 100}" />
+                        <c:set var="percentage" value="${(transaction.tokenSize * difference) * 100/transaction.amount}" />
                         <td class="green">+${transaction.tokenSize * difference}
                           (+<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                       <c:if test="${transaction.price > bitcoinPrice}">
                         <c:set var="difference" value="${bitcoinPrice - transaction.price}" />
-                        <c:set var="percentage" value="${(difference / bitcoinPrice) * 100}" />
+                        <c:set var="percentage" value="${(transaction.tokenSize * difference) * 100/transaction.amount}" />
                         <td class="red">${transaction.tokenSize * difference}
                           (<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
@@ -460,13 +459,13 @@
                     <c:if test="${transaction.direction == 'short'}">
                       <c:if test="${transaction.price >= ethereumPrice}">
                         <c:set var="difference" value="${transaction.price - ethereumPrice}" />
-                        <c:set var="percentage" value="${(difference / ethereumPrice) * 100}" />
+                        <c:set var="percentage" value="${(transaction.tokenSize * difference) * 100/transaction.amount}" />
                         <td class="green">+${transaction.tokenSize * difference}
                           (+<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                       <c:if test="${transaction.price < ethereumPrice}">
                         <c:set var="difference" value="${transaction.price - ethereumPrice}" />
-                        <c:set var="percentage" value="${(difference / ethereumPrice) * 100}" />
+                        <c:set var="percentage" value="${(transaction.tokenSize * difference) * 100/transaction.amount}" />
                         <td class="red">${transaction.tokenSize * difference}
                           (<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
@@ -474,13 +473,13 @@
                     <c:if test="${transaction.direction == 'long'}">
                       <c:if test="${transaction.price <= ethereumPrice}">
                         <c:set var="difference" value="${ethereumPrice - transaction.price}" />
-                        <c:set var="percentage" value="${(difference / ethereumPrice) * 100}" />
+                        <c:set var="percentage" value="${(transaction.tokenSize * difference) * 100/transaction.amount}" />
                         <td class="green">+${transaction.tokenSize * difference}
                           (+<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                       <c:if test="${transaction.price > ethereumPrice}">
                         <c:set var="difference" value="${ethereumPrice - transaction.price}" />
-                        <c:set var="percentage" value="${(difference / ethereumPrice) * 100}" />
+                        <c:set var="percentage" value="${(transaction.tokenSize * difference) * 100/transaction.amount}" />
                         <td class="red">${transaction.tokenSize * difference}
                           (<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
@@ -490,13 +489,13 @@
                     <c:if test="${transaction.direction == 'short'}">
                       <c:if test="${transaction.price >= uniswapPrice}">
                         <c:set var="difference" value="${transaction.price - uniswapPrice}" />
-                        <c:set var="percentage" value="${(difference / uniswapPrice) * 100}" />
+                        <c:set var="percentage" value="${(transaction.tokenSize * difference) * 100/transaction.amount}" />
                         <td class="green">+${transaction.tokenSize * difference}
                           (+<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                       <c:if test="${transaction.price < uniswapPrice}">
                         <c:set var="difference" value="${transaction.price - uniswapPrice}" />
-                        <c:set var="percentage" value="${(difference / uniswapPrice) * 100}" />
+                        <c:set var="percentage" value="${(transaction.tokenSize * difference) * 100/transaction.amount}" />
                         <td class="red">${transaction.tokenSize * difference}
                           (<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
@@ -504,13 +503,13 @@
                     <c:if test="${transaction.direction == 'long'}">
                       <c:if test="${transaction.price <= uniswapPrice}">
                         <c:set var="difference" value="${uniswapPrice - transaction.price}" />
-                        <c:set var="percentage" value="${(difference / uniswapPrice) * 100}" />
+                        <c:set var="percentage" value="${(transaction.tokenSize * difference) * 100/transaction.amount}" />
                         <td class="green">+${transaction.tokenSize * difference}
                           (+<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                       <c:if test="${transaction.price > uniswapPrice}">
                         <c:set var="difference" value="${uniswapPrice - transaction.price}" />
-                        <c:set var="percentage" value="${(difference / uniswapPrice) * 100}" />
+                        <c:set var="percentage" value="${(transaction.tokenSize * difference) * 100/transaction.amount}" />
                         <td class="red">${transaction.tokenSize * difference}
                           (<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
@@ -520,13 +519,13 @@
                     <c:if test="${transaction.direction == 'short'}">
                       <c:if test="${transaction.price >= ripplePrice}">
                         <c:set var="difference" value="${transaction.price - ripplePrice}" />
-                        <c:set var="percentage" value="${(difference / ripplePrice) * 100}" />
+                        <c:set var="percentage" value="${(transaction.tokenSize * difference) * 100/transaction.amount}" />
                         <td class="green">+${transaction.tokenSize * difference}
                           (+<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                       <c:if test="${transaction.price < ripplePrice}">
                         <c:set var="difference" value="${transaction.price - ripplePrice}" />
-                        <c:set var="percentage" value="${(difference / ripplePrice) * 100}" />
+                        <c:set var="percentage" value="${(transaction.tokenSize * difference) * 100/transaction.amount}" />
                         <td class="red">${transaction.tokenSize * difference}
                           (<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
@@ -534,13 +533,13 @@
                     <c:if test="${transaction.direction == 'long'}">
                       <c:if test="${transaction.price <= ripplePrice}">
                         <c:set var="difference" value="${ripplePrice - transaction.price}" />
-                        <c:set var="percentage" value="${(difference / ripplePrice) * 100}" />
+                        <c:set var="percentage" value="${(transaction.tokenSize * difference) * 100/transaction.amount}" />
                         <td class="green">+${transaction.tokenSize * difference}
                           (+<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                       <c:if test="${transaction.price > ripplePrice}">
                         <c:set var="difference" value="${ripplePrice - transaction.price}" />
-                        <c:set var="percentage" value="${(difference / ripplePrice) * 100}" />
+                        <c:set var="percentage" value="${(transaction.tokenSize * difference) * 100/transaction.amount}" />
                         <td class="red">${transaction.tokenSize * difference}
                           (<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
@@ -550,13 +549,13 @@
                     <c:if test="${transaction.direction == 'short'}">
                       <c:if test="${transaction.price >= chainlinkPrice}">
                         <c:set var="difference" value="${transaction.price - chainlinkPrice}" />
-                        <c:set var="percentage" value="${(difference / chainlinkPrice) * 100}" />
+                        <c:set var="percentage" value="${(transaction.tokenSize * difference) * 100/transaction.amount}" />
                         <td class="green">+${transaction.tokenSize * difference}
                           (+<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                       <c:if test="${transaction.price < chainlinkPrice}">
                         <c:set var="difference" value="${transaction.price - chainlinkPrice}" />
-                        <c:set var="percentage" value="${(difference / chainlinkPrice) * 100}" />
+                        <c:set var="percentage" value="${(transaction.tokenSize * difference) * 100/transaction.amount}" />
                         <td class="red">${transaction.tokenSize * difference}
                           (<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
@@ -564,13 +563,13 @@
                     <c:if test="${transaction.direction == 'long'}">
                       <c:if test="${transaction.price <= chainlinkPrice}">
                         <c:set var="difference" value="${chainlinkPrice - transaction.price}" />
-                        <c:set var="percentage" value="${(difference / chainlinkPrice) * 100}" />
+                        <c:set var="percentage" value="${(transaction.tokenSize * difference) * 100/transaction.amount}" />
                         <td class="green">+${transaction.tokenSize * difference}
                           (+<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>
                       <c:if test="${transaction.price > chainlinkPrice}">
                         <c:set var="difference" value="${chainlinkPrice - transaction.price}" />
-                        <c:set var="percentage" value="${(difference / chainlinkPrice) * 100}" />
+                        <c:set var="percentage" value="${(transaction.tokenSize * difference) * 100/transaction.amount}" />
                         <td class="red">${transaction.tokenSize * difference}
                           (<fmt:formatNumber value="${percentage}" type="percent" pattern="##.##" />)</td>
                       </c:if>

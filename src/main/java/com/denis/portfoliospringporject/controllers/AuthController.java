@@ -81,31 +81,4 @@ public class AuthController {
         return "redirect:/index";
     }
 
-    @GetMapping("/edit/{userId}")
-    public String editProfile (@PathVariable (name = "userId") Long userId, HttpSession session, Model model){
-        if(session.getAttribute("loggedInUserID") == null){
-            return "redirect:/login";
-        }
-
-        model.addAttribute("user", userService.findById(userId));
-
-        return "editProfile";
-    }
-
-    @PutMapping("/edit/{userId}")
-    public String editing(@Valid @ModelAttribute("user") User user,
-                          @PathVariable (name = "userId") Long userId,
-                          BindingResult result){
-
-        if (result.hasErrors()){
-            return"editProfile";
-        }
-
-        user.setId(userId);
-        System.out.println(user.getImage());
-        userService.updateUser(user);
-
-        return "redirect:/trade";
-    }
-
 }

@@ -38,7 +38,6 @@
   <div class="d-flex nav-brand justify-content-around">
     <h3>Welcome ${user.firstName}</h3>
     <img src="${pageContext.request.contextPath}${user.image}" alt="Not found" width="50px" height="50px"/>
-    <a href="/edit/${user.id}"><button class="p-2 nav-btn">Edit Profile</button></a>
     <a href="/logout"><button class="p-2 nav-btn">Log out</button></a>
   </div>
 </nav>

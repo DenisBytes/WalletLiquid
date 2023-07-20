@@ -68,7 +68,7 @@ main h1{
     overflow: hidden;
 }
 nav{
-    background-color: black;
+    background-color: transparent;
     width: 100%;
 }
 .nav-container {

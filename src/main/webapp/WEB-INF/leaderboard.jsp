@@ -31,7 +31,6 @@
     <div class="d-flex nav-brand justify-content-around">
         <h3>Welcome ${user.firstName}</h3>
         <img src="${pageContext.request.contextPath}${user.image}" alt="Not found" width="50px" height="50px"/>
-        <a href="/edit/${user.id}"><button class="p-2 nav-btn">Edit Profile</button></a>
         <a href="/logout"><button class="p-2 nav-btn">Log out</button></a>
     </div>
 </nav>
@@ -47,7 +46,7 @@
         <c:forEach var="user" items="${userList}" varStatus="loop">
             <tr>
                 <td><h4>${loop.index + 1}</h4></td>
-                <td><img src="${pageContext.request.contextPath}/${user.image}" alt="not found" width="25px" height="25px"></td>
+                <td><img src="${pageContext.request.contextPath}${user.image}" alt="not found" width="25px" height="25px"></td>
                 <td><h4><a href="/leaderboard/${user.id}" class="text-decoration-none">${user.firstName} ${user.lastName}</a></h4></td>
                 <td><h4>${user.usd}</h4></td>
             </tr>
