@@ -9,14 +9,6 @@
     <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/leaderboard.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-    <style>
-        .special-green{
-            background-color: #0f2e29;
-        }
-        .special-darkgreen{
-            background-color: #02221f;
-        }
-    </style>
 </head>
 <body class="special-darkgreen">
 <nav class="d-flex justify-content-between align-items-center p-2">

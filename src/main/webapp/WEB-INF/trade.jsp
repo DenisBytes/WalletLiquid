@@ -9,22 +9,8 @@
   <link rel="stylesheet" href="/css/trade.css">
   <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-  <style>
-    .special-green{
-      background-color: #0f2e29;
-    }
-    .special-darkgreen{
-      background-color: #02221f;
-    }
-    .green{
-      color: #02c903;
-    }
-    .red{
-      color: #e90c2f;
-    }
-  </style>
 </head>
-<body style="background-color: #02221f">
+<body class="special-darkgreen">
 <nav class="d-flex justify-content-between align-items-center p-2">
     <div class="d-flex justify-content-between align-items-center nav-logo nav-brand">
         <div class="d-flex align-items-center">

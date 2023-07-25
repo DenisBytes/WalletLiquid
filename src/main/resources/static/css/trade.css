@@ -203,3 +203,15 @@ select {
     padding: 0% 0.125%;
     text-overflow: fade; /* Add ellipsis (...) to indicate hidden text */
 }
+.special-green{
+    background-color: #0f2e29;
+}
+.special-darkgreen{
+    background-color: #02221f;
+}
+.green{
+    color: #02c903;
+}
+.red{
+    color: #e90c2f;
+}

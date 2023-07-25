@@ -68,7 +68,7 @@
   .right{
     width: 50%;
     position: relative;
-    bottom: 2px;
+    bottom: 3px;
   }
 
   #signup{

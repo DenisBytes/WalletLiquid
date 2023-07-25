@@ -66,3 +66,15 @@ table{
     align-items: center;
     text-align: center;
 }
+.special-green{
+    background-color: #0f2e29;
+}
+.special-darkgreen{
+    background-color: #02221f;
+}
+.green{
+    color: #02c903;
+}
+.red{
+    color: #e90c2f;
+}
