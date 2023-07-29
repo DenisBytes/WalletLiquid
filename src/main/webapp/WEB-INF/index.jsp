@@ -100,25 +100,6 @@
             Arrived
         </h1>
     </div>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        function updateLayout() {
-            const descContainerDiv = document.getElementById("desc-container");
-
-            if (window.innerWidth < 768) {
-                descContainerDiv.classList.add("w-100");
-                descContainerDiv.classList.remove("w-50");
-            } else {
-                descContainerDiv.classList.remove("w-100");
-                descContainerDiv.classList.add("w-50");
-            }
-        }
-
-        // Run the updateLayout function when the page loads and when the window is resized
-        updateLayout();
-        window.addEventListener("resize", updateLayout);
-    });
-</script>
 </main>
 <footer class="d-flex justify-content-between p-4">
     <div class="w-50">

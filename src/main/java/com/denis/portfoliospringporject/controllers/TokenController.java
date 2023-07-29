@@ -40,34 +40,11 @@ public class TokenController {
     TypeService typeService;
 
     @RequestMapping(value = {"/","/index"})
-    public String index(Model model, HttpSession session) {
+    public String index(HttpSession session) {
 
         session.setAttribute("loggedInUserID", null);
 
         return "index";
-    }
-    private String getLogoUrl(OkHttpClient client, String symbol) throws Exception {
-        String apiKey = "ddd124324e14748fe778172f90a2def1ce56617ba3723f75f1d25dd3e8f8ca6b";
-        String url = "https://data-api.cryptocompare.com/asset/v1/data/by/symbol?asset_symbol=" + symbol + "&api_key=" + apiKey;
-
-        Request logoRequest = new Request.Builder()
-                .url(url)
-                .build();
-
-        try (Response logoResponse = client.newCall(logoRequest).execute()) {
-            if (logoResponse.isSuccessful()) {
-                ObjectMapper logoObjectMapper = new ObjectMapper();
-                JsonNode logoRoot = logoObjectMapper.readTree(logoResponse.body().byteStream());
-                JsonNode logoDataNode = logoRoot.path("Data");
-
-                if (logoDataNode.isObject()) {
-                    String urlja = logoDataNode.path("LOGO_URL").asText();
-                    return  urlja;
-                }
-            }
-        }
-
-        return null;
     }
 
     @GetMapping("/trade")
@@ -101,12 +78,10 @@ public class TokenController {
         double chainlinkPrice = 0.0;
 
         try {
-            // Retrieve data from the Binance API for order book
             Request orderBookRequest = new Request.Builder()
                     .url("https://data-api.binance.vision/api/v3/depth?symbol=" + symbol + "USDT")
                     .build();
 
-            // Retrieve data from the CEX.IO API for trade history
             Request tradeHistoryRequest = new Request.Builder()
                     .url("https://cex.io/api/trade_history/" + symbol + "/USDT")
                     .build();
@@ -204,11 +179,13 @@ public class TokenController {
                 model.addAttribute("ripplePrice", ripplePrice);
                 model.addAttribute("chainlinkPrice", chainlinkPrice);
             } else {
-                // Handle unsuccessful response
+                System.out.println("Failed to fetch data from external API.");
+                model.addAttribute("errorMessage", "Oops! Something went wrong while fetching data. Please try again later.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            // Handle exception as needed
+            System.err.println("An error occurred while processing the request: " + e.getMessage());
+            model.addAttribute("errorMessage", "Oops! Something went wrong. Please try again later.");
         }
 
         List<Transaction> transactionList = transactionService.allTransactionsByType("open");

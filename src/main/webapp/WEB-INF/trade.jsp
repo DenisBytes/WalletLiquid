@@ -27,6 +27,12 @@
     </div>
 </nav>
 
+<c:if test="${errorMessage != null}">
+  <span class="w-100 d-flex justify-content-center">
+    <h1>${errorMessage}</h1>
+  </span>
+</c:if>
+
 <div class="trading-container special-green">
   <div class="d-flex special-green">
     <div class="col-6 special-green">
@@ -593,12 +599,12 @@
           </section>
         </div>
       </div>
-      <div class="tab-pane fade" id="orders">
-
+      <div class="tab-pane fade d-flex justify-content-center" id="orders">
+        <h1 style="color: white; margin: 1%">Coming Soon...</h1>
       </div>
       <div class="tab-pane fade" id="trades">
         <section class="side">
-          <table class="table" style="color: white">
+          <table class="table" style="color: white;">
             <thead>
             <tr>
               <th scope="col">Pair</th>

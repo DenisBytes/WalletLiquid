@@ -57,19 +57,8 @@ public class AuthController {
 
 
     @GetMapping("/login")
-    public String login(
-            @ModelAttribute("newUser") User user,
-            @ModelAttribute("newLogin") LoginUser loginUser,
-            @RequestParam(value="error", required=false) String error,
-            @RequestParam(value="logout", required=false) String logout,
-            Model model) {
-
-        if(error!=null) {
-            model.addAttribute("errorMessage","Invalid Credentials, Please try again.");
-        }
-        if(logout!=null) {
-            model.addAttribute("logoutMessage","Logout Successful!");
-        }
+    public String login(@ModelAttribute("newUser") User user,
+                        @ModelAttribute("newLogin") LoginUser loginUser) {
 
         return "loginPage";
     }

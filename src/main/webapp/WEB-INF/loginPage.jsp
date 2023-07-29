@@ -6,7 +6,6 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <link rel="stylesheet" href="/css/login.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -92,13 +91,7 @@
         <div id="signup" class="tab-pane fade in active" style="height: 500px;">
           <form:form action="/register" method="post" modelAttribute="newUser">
             <span class="signup-form">
-              <c:if test="${logoutMessage != null}">
-                <c:out value="${logoutMessage}"></c:out>
-              </c:if>
               <h1>Sign Up</h1>
-              <c:if test="${errorMessage != null}">
-                <c:out value="${errorMessage}"></c:out>
-              </c:if>
             </span>
             <div class="form-wrapper">
               <div style="display: flex">

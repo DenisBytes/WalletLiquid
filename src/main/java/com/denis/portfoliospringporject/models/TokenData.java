@@ -6,19 +6,17 @@ public class TokenData {
     private double tokenPriceUSD;
     private double priceChange24h;
     private double volume24h;
-    private String imageUrl;
 
     public TokenData(){
 
     }
 
-    public TokenData(String symbol, String tokenName, double tokenPriceUSD, double priceChange24h, double volume24h, String imageUrl) {
+    public TokenData(String symbol, String tokenName, double tokenPriceUSD, double priceChange24h, double volume24h) {
         this.symbol = symbol;
         this.tokenName = tokenName;
         this.tokenPriceUSD = tokenPriceUSD;
         this.priceChange24h = priceChange24h;
         this.volume24h = volume24h;
-        this.imageUrl = imageUrl;
     }
 
     public String getSymbol() {
@@ -58,21 +56,10 @@ public class TokenData {
         this.priceChange24h = priceChange24h;
     }
 
-    public double getVolume24h() {
-        return volume24h;
-    }
-
     public void setVolume24h(double volume24h) {
         this.volume24h = volume24h;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
     public String getVolume24hFormatted() {
         if (volume24h >= 1000000) {
             return String.format("%.2fM", volume24h / 1000000);
