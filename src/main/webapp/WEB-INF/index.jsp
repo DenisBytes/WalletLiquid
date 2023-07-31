@@ -89,7 +89,7 @@
         </div>
         <!-- TradingView Widget END -->
     </div>
-    <a href="/trade"><button class="p-2 nav-btn">Get Started</button></a>
+    <a href="/login"><button class="p-2 nav-btn">Get Started</button></a>
 </nav>
 <main class="d-flex">
     <div id="desc-container" class="w-50">
