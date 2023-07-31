@@ -105,6 +105,7 @@
               "backgroundColor": "#02221f",
               "gridColor": "#0f2e29",
               "save_image": false,
+              "hide_side_toolbar": false,
               "container_id": "tradingview_6184e"
             });
           }
