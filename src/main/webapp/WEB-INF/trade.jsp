@@ -262,6 +262,7 @@
         <div class="tab-pane fade show active special-darkgreen" id="market">
           <form:form action="/marketorder" method="post" modelAttribute="transactionMarket">
             <div class="row special-darkgreen" style="padding: 2%;margin-top: 5%;">
+              <form:errors path="${transactionMarket.*}"></form:errors>
               <form:select path="direction" cssClass="toggle-dropdown special-green" cssStyle="color: white; padding: 1%;border: 1px solid #97fce4;border-radius: 0.5rem;">
                 <form:option value="long" label="Long" />
                 <form:option value="short" label="Short" />
