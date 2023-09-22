@@ -1,6 +1,8 @@
 package com.denis.portfoliospringporject.controllers;
 
-import com.denis.portfoliospringporject.models.TokenData;
+import com.denis.portfoliospringporject.components.TransactionDTOConverter;
+import com.denis.portfoliospringporject.components.UserDTOConverter;
+import com.denis.portfoliospringporject.dto.TransactionDTO;
 import com.denis.portfoliospringporject.models.Transaction;
 import com.denis.portfoliospringporject.models.Type;
 import com.denis.portfoliospringporject.models.User;
@@ -20,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -39,34 +42,40 @@ public class TokenController {
     @Autowired
     TypeService typeService;
 
+    @Autowired
+    TransactionDTOConverter transactionDTOConverter;
+
+    @Autowired
+    UserDTOConverter userDTOConverter;
+
     @RequestMapping(value = {"/","/index"})
-    public String index(HttpSession session) {
-
-        session.setAttribute("loggedInUserID", null);
-
+    public String indexGet() {
         return "index";
     }
 
     @GetMapping("/trade")
-    public String showOrderBook(Model model, HttpSession session) {
+    public String tradeGet(Principal principal, Model model, HttpSession session) {
 
-        if (session.getAttribute("loggedInUserID") == null){
-            System.out.println("HELLO NOT WORKING");
+        if(principal==null) {
             return "redirect:/login";
         }
 
-        User user = userService.findById((Long) session.getAttribute("loggedInUserID"));
+        String email = principal.getName();
+        User user = userService.findByEmail(email);
         model.addAttribute("user", user);
-
-        System.out.println(user.getImage());
 
         Transaction transactionMarket = new Transaction();
         Transaction transactionLimit = new Transaction();
+        List<Transaction> openTransactions = transactionService.allUserTransactionsByType((user.getId()), "open");
+        List<Transaction> cloedTransactions = transactionService.allUserTransactionsByType((user.getId()), "closed");
+        List<Transaction> pendingTransactions = transactionService.allUserTransactionsByType((user.getId()), "pending");
+
+
         model.addAttribute("transactionMarket", transactionMarket);
         model.addAttribute("transactionLimit", transactionLimit);
-        model.addAttribute("openOrders", transactionService.allUserTransactionsByType((Long) session.getAttribute("loggedInUserID"), "open"));
-        model.addAttribute("closedOrders", transactionService.allUserTransactionsByType((Long) session.getAttribute("loggedInUserID"), "close"));
-        model.addAttribute("pendingOrders", transactionService.allUserTransactionsByType((Long) session.getAttribute("loggedInUserID"), "pending"));
+        model.addAttribute("openOrders", transactionDTOConverter.entityToDtoList(openTransactions));
+        model.addAttribute("closedOrders", transactionDTOConverter.entityToDtoList(cloedTransactions));
+        model.addAttribute("pendingOrders", transactionDTOConverter.entityToDtoList(pendingTransactions));
 
         OkHttpClient client = new OkHttpClient().newBuilder().build();
         String symbol = session.getAttribute("symbol") != null ? (String) session.getAttribute("symbol") : "BTC";
@@ -217,7 +226,7 @@ public class TokenController {
 
 
     @PostMapping("/elaborate")
-    public String trade(@RequestParam String symbol, HttpSession session) {
+    public String tradePost(@RequestParam String symbol, HttpSession session) {
 
         session.setAttribute("symbol", symbol);
         return "redirect:/trade";
@@ -225,13 +234,14 @@ public class TokenController {
 
     @PostMapping("/marketorder")
     public String marketorder(@Valid @ModelAttribute("transactionMarket") Transaction transactionMarket,
-                              BindingResult result, HttpSession session){
+                              BindingResult result, Principal principal){
 
-        if(session.getAttribute("loggedInUserID") == null){
+        if(principal==null) {
             return "redirect:/login";
         }
 
-        User user = userService.findById((Long) session.getAttribute("loggedInUserID"));
+        String email = principal.getName();
+        User user = userService.findByEmail(email);
 
         if(result.hasErrors() || transactionMarket.getAmount() > user.getUsd()){
             return "redirect:/trade";
@@ -248,6 +258,7 @@ public class TokenController {
         } else if (transactionMarket.getDirection().equals("short")) {
             transactionMarket.setLiqPrice(transactionMarket.getPrice() * (1 + 0.906 / transactionMarket.getLeverage()));
         }
+        transactionMarket.setClosedAt(LocalDateTime.now());
         transactionMarket.setUser(user);
         userService.updateUser(user);
         transactionService.saveTransaction(transactionMarket);
@@ -258,10 +269,14 @@ public class TokenController {
     @GetMapping("/closemarket/{transactionId}")
     public String closeOrder(@PathVariable("transactionId") Long transactionId,
                              @RequestParam("traLastPrice") double traLastPrice,
-                             HttpSession session){
-        Transaction transaction = transactionService.findTransaction(transactionId);
-        Type type = typeService.findByName("close");
+                             Principal principal){
 
+        if(principal==null) {
+            return "redirect:/login";
+        }
+
+        Transaction transaction = transactionService.findTransaction(transactionId);
+        Type type = typeService.findByName("closed");
 
         transaction.setType(type);
         if(transaction.getDirection().equals("long")){
@@ -272,14 +287,10 @@ public class TokenController {
             transaction.setEarnings(transaction.getTokenSize()*(transaction.getPrice()-transaction.getLastPrice()));
         }
 
-        User user = userService.findById((Long) session.getAttribute("loggedInUserID"));
+        String email = principal.getName();
+        User user = userService.findByEmail(email);
 
-
-        System.out.println("user usd: "+user.getUsd());
-        System.out.println("tran amount: "+transaction.getAmount());
-        System.out.println("tran earnings: "+transaction.getEarnings());
-
-        user.setUsd(user.getUsd() +transaction.getEarnings());
+        user.setUsd(user.getUsd() + transaction.getAmount() + transaction.getEarnings());
         userService.updateUser(user);
         transactionService.saveTransaction(transaction);
 
@@ -288,9 +299,14 @@ public class TokenController {
 
     @GetMapping("/liquidation/{transactionId}")
     public String liquidation(@PathVariable("transactionId") Long transactionId,
-                             HttpSession session){
+                              Principal principal){
+
+        if(principal==null) {
+            return "redirect:/login";
+        }
+
         Transaction transaction = transactionService.findTransaction(transactionId);
-        Type type = typeService.findByName("close");
+        Type type = typeService.findByName("closed");
 
 
         transaction.setType(type);
@@ -302,7 +318,8 @@ public class TokenController {
             transaction.setEarnings(transaction.getTokenSize()*(transaction.getPrice()-transaction.getLastPrice()));
         }
 
-        User user = userService.findById((Long) session.getAttribute("loggedInUserID"));
+        String email = principal.getName();
+        User user = userService.findByEmail(email);
 
         user.setUsd(user.getUsd()+transaction.getEarnings());
         userService.updateUser(user);
@@ -312,46 +329,51 @@ public class TokenController {
     }
 
     @GetMapping("/leaderboard")
-    public String leaderboard(Model model, HttpSession session){
+    public String leaderboardGet(Model model, Principal principal){
 
-        if(session.getAttribute("loggedInUserID") == null){
+        if(principal==null) {
             return "redirect:/login";
         }
 
-        model.addAttribute("user", userService.findById((Long) session.getAttribute("loggedInUserID")));
-        model.addAttribute("userList",userService.allUserByMostUsd());
+        String email = principal.getName();
+        User user = userService.findByEmail(email);
+
+        model.addAttribute("user", userDTOConverter.entityToDto(user));
+        model.addAttribute("userList",userDTOConverter.entityToDtoList(userService.allUserByMostUsd()));
 
         return "leaderboard";
     }
 
     @GetMapping("/leaderboard/{userId}")
-    public String userTransactions(@PathVariable Long userId, Model model, HttpSession session){
-        if(session.getAttribute("loggedInUserID") == null){
+    public String userTransactionsGet(@PathVariable Long userId, Model model, Principal principal){
+        if(principal==null) {
             return "redirect:/login";
         }
 
-        User currentUser = userService.findById((Long) session.getAttribute("loggedInUserID"));
-
+        String email = principal.getName();
+        User currentUser = userService.findByEmail(email);
         User user = userService.findById(userId);
 
-        model.addAttribute("currentUser",currentUser);
-        model.addAttribute("user",user);
-        model.addAttribute("transactionList", transactionService.allUserTransactions(userId));
+        model.addAttribute("currentUser",userDTOConverter.entityToDto(currentUser));
+        model.addAttribute("user",userDTOConverter.entityToDto(user));
+        model.addAttribute("transactionList", transactionDTOConverter.entityToDtoList(transactionService.allUserTransactions(userId)));
 
         return "userTransactions";
     }
 
     @GetMapping("/history/{userId}")
-    public String history(@PathVariable Long userId,Model model, HttpSession session){
-        if(session.getAttribute("loggedInUserID") == null){
+    public String historyGet(@PathVariable Long userId,Model model, Principal principal){
+        if(principal==null) {
             return "redirect:/login";
         }
 
-        User user = userService.findById(userId);
+        String email = principal.getName();
+        User user = userService.findByEmail(email);
 
-        model.addAttribute("user",user);
-        model.addAttribute("transactionList", transactionService.allUserTransactions(userId));
+        model.addAttribute("user",userDTOConverter.entityToDto(user));
+        model.addAttribute("transactionList", transactionDTOConverter.entityToDtoList(transactionService.allUserTransactions(userId)));
 
         return "history";
     }
+
 }

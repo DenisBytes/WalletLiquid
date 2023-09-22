@@ -48,9 +48,10 @@
             <artifactId>jakarta.servlet.jsp.jstl</artifactId>
         </dependency>
         <!-- DEPENDENCIES FOR INTEGRATING SQL DATABASE AND USING JPA -->
-        <!-- Note: Project will not run until a schema has been created and the
-            proper settings in application properties are present for
-            connecting to a database. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
@@ -92,11 +93,27 @@
             <artifactId>okhttp</artifactId>
             <version>4.9.1</version>
         </dependency>
-
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.33</version>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-taglibs</artifactId>
         </dependency>
 
     </dependencies>
@@ -106,14 +123,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>com.heroku.sdk</groupId>
-                <artifactId>heroku-maven-plugin</artifactId>
-                <configuration>
-                    <appName>walletliquid</appName>
-                </configuration>
-                <version>3.0.7</version>
             </plugin>
         </plugins>
     </build>

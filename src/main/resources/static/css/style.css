@@ -1,133 +1,147 @@
+@media screen and (min-width: 768px) {
 
-
-.footer-text{
-    margin-left: 10%;
-}
-.github-text {
-    position: absolute;
-    bottom: 50%;
-    left: 50%;
-    transform: translate(-50%, -10px);
-    background-color: black;
-    color: rgb(76, 215, 244);
-    padding: 5px;
-    opacity: 0;
-    transition: opacity 0.2s ease-in-out;
-}
-.githubsvg:hover .github-text {
-    opacity: 1;
-}
-.githubsvg:hover svg{
-    transition: all 0.2s ease-in-out 0s;
-    stroke: rgb(76, 215, 244);
-}
-.githubsvg{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 48px;
-    height: 48px;
-    background: rgb(14, 14, 20);
-    border-radius: 12px;
-    transition: all 0.2s ease-in-out 0s;
-    position: relative;
-    border: 1px solid transparent;
-}
-html,
-body {
-    height: 100%;
-    overflow: hidden;
-}
-body{
-    background: url('../images/backgroundGIPHY.gif') no-repeat center center fixed;
-    background-size: cover;
-    color: white;
-    font-family: "Lucida Sans Typewriter";
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background-color: #06070d;
-}
-main {
-    margin: 0% 5%;
-    flex-grow: 1;
-    overflow: auto;
-    padding-bottom: 20px;
-    color: white;
-}
-
-p{
-    color: white;
-}
-
-footer {
-    flex-shrink: 0;
-    color: white;
-}
-main h1{
-    font-family: "Sans Serif Collection";
-    font-size: 105px;
-    overflow: hidden;
-}
-nav{
-    background-color: transparent;
-    width: 100%;
-}
-.nav-container {
-    font-weight: bold;
-    display: flex;
-    margin: auto;
-    width:65%;
-}
-.nav-logo{
-
-}
-#nav-logo-img{
-    padding: 0% 2%;
-    width: 75px;
-    height: 75px;
-}
-.nav-btn{
-    background-color: blue;
-    color: white;
-    border-radius: 5%;
-    border: 1px solid blue;
-
-}
-
-@keyframes slide {
-    from{
-        transform: translateX(0%);
+    .footer-text {
+        margin-left: 10%;
     }
-    to{
-        transform: translateX(-100%);
+
+    .github-text {
+        position: absolute;
+        bottom: 50%;
+        left: 50%;
+        transform: translate(-50%, -10px);
+        background-color: black;
+        color: rgb(76, 215, 244);
+        padding: 5px;
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
     }
-}
 
-.tokens{
-    display: flex;
-    overflow: hidden;
-    padding: 1%;
-    background-color: black;
-    color: white;
-    white-space: nowrap;
-}
+    .githubsvg:hover .github-text {
+        opacity: 1;
+    }
 
-.tokens:hover .tokens-slide{
-    animation-play-state:paused;
-}
+    .githubsvg:hover svg {
+        transition: all 0.2s ease-in-out 0s;
+        stroke: rgb(76, 215, 244);
+    }
 
-.tokens-slide{
-    animation: 40s slide infinite linear;
-    white-space: nowrap; /* Prevent text wrapping */
-}
+    .githubsvg {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 48px;
+        height: 48px;
+        background: rgb(14, 14, 20);
+        border-radius: 12px;
+        transition: all 0.2s ease-in-out 0s;
+        position: relative;
+        border: 1px solid transparent;
+    }
 
-.tokens-slide span {
-    display: inline-block;
-    padding: 0% 0.125%;
-    text-overflow: fade; /* Add ellipsis (...) to indicate hidden text */
-}
+    html,
+    body {
+        height: 100%;
+        overflow: hidden;
+    }
 
-.trading-container{
-    background-color: #0c0d12;
+    body {
+        background: url('../images/backgroundGIPHY.gif') no-repeat center center fixed;
+        background-size: cover;
+        color: white;
+        font-family: "Lucida Sans Typewriter";
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background-color: #06070d;
+    }
+
+    main {
+        margin: 0% 5%;
+        flex-grow: 1;
+        overflow: auto;
+        padding-bottom: 20px;
+        color: white;
+    }
+
+    p {
+        color: white;
+    }
+
+    footer {
+        flex-shrink: 0;
+        color: white;
+    }
+
+    main h1 {
+        font-family: "Sans Serif Collection";
+        font-size: 105px;
+        overflow: hidden;
+    }
+
+    nav {
+        background-color: transparent;
+        width: 100%;
+    }
+
+    .nav-container {
+        font-weight: bold;
+        display: flex;
+        margin: auto;
+        width: 65%;
+    }
+
+    .nav-logo {
+
+    }
+
+    #nav-logo-img {
+        padding: 0% 2%;
+        width: 75px;
+        height: 75px;
+    }
+
+    .nav-btn {
+        background-color: blue;
+        color: white;
+        border-radius: 5%;
+        border: 1px solid blue;
+
+    }
+
+    @keyframes slide {
+        from {
+            transform: translateX(0%);
+        }
+        to {
+            transform: translateX(-100%);
+        }
+    }
+
+    .tokens {
+        display: flex;
+        overflow: hidden;
+        padding: 1%;
+        background-color: black;
+        color: white;
+        white-space: nowrap;
+    }
+
+    .tokens:hover .tokens-slide {
+        animation-play-state: paused;
+    }
+
+    .tokens-slide {
+        animation: 40s slide infinite linear;
+        white-space: nowrap; /* Prevent text wrapping */
+    }
+
+    .tokens-slide span {
+        display: inline-block;
+        padding: 0% 0.125%;
+        text-overflow: fade; /* Add ellipsis (...) to indicate hidden text */
+    }
+
+    .trading-container {
+        background-color: #0c0d12;
+    }
 }

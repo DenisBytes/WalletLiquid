@@ -1,0 +1,150 @@
+.nav-brand{
+    width: 50%;
+}
+
+.mini-nav{
+    border: white 1px solid;
+    border-radius: 0.5rem;
+    padding: 2%;
+}
+
+
+nav{
+    background-color: black;
+    width: 100%;
+}
+
+#nav-logo-img{
+    padding: 0% 2%;
+    width: 75px;
+    height: 75px;
+}
+.nav-logo{
+    color: white;
+}
+
+.nav-btn{
+    background-color: blue;
+    color: white;
+    border-radius: 5%;
+    border: 1px solid blue;
+
+}
+
+main{
+    background-color: black;
+    border-radius: 0.5rem;
+}
+
+h2 {
+    color: white;
+}
+
+div{background-color: black;
+
+}
+table {
+    color: white;
+    font-size: 12px;
+}
+
+.table-container > div {
+    flex-grow: 1;
+}
+
+th{
+    color: white;
+}
+td{
+    color: white;
+}
+table{
+    align-items: center;
+    text-align: center;
+}
+.special-green{
+    background-color: #0f2e29;
+}
+.special-darkgreen{
+    background-color: #02221f;
+}
+.green{
+    color: #02c903;
+}
+.red{
+    color: #e90c2f;
+}
+.form-wrapper {
+    padding: 0% 10%;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: black;
+}
+body{
+    background-size: cover;
+    color: white;
+    font-family: "Lucida Sans Typewriter";
+}
+.nav-btn{
+    background-color: blue;
+    color: white;
+    border-radius: 5%;
+    border: 1px solid blue;
+}
+
+.login_form_container{
+    position: relative;
+    background: #040717;
+    border-radius: 50px 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    width: 900px;
+    height: 500px;
+}
+.login_form_container::before{
+
+    position: absolute;
+    width: 650%;
+    height: 650%;
+    content: '';
+    background-image: conic-gradient(transparent, transparent, transparent, #ee00ff);
+    animation: rotate_border 6s linear infinite;
+
+}
+.login_form_container::after{
+
+    position: absolute;
+    width: 650%;
+    height: 650%;
+    content: '';
+    background-image: conic-gradient(transparent, transparent, transparent, #00ccff);
+    animation: rotate_border 6s linear infinite;
+    animation-delay: -3s;
+}
+@keyframes rotate_border{
+    0%{
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}
+.login_form {
+    position: static;
+    content: '';
+    background-color: black;
+    border-radius: 50px 5px;
+    inset: 5px;
+    z-index: 10;
+    color: white;
+    padding: 4%;
+    width: 98%;
+    height: 98%;
+}
+td{
+    font-size: 20px;
+}

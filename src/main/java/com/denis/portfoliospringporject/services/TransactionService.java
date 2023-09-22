@@ -12,8 +12,6 @@ public class TransactionService {
     @Autowired
     TransactionRepository transactionRepository;
     public Transaction saveTransaction(Transaction transaction){
-        transaction.setTokenSize((transaction.getLeverage()*transaction.getAmount())/ transaction.getPrice());
-
         return transactionRepository.save(transaction);
     }
 

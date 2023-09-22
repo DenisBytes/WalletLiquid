@@ -14,12 +14,24 @@
     </head>
 <body>
 
+<style>
+    @media screen and(max-width: 768px) {
+        #desc-container{
+            width: 75%;
+            font-size: 150px;
+        }
+        #nav-text{
+            display: none;
+        }
+    }
+</style>
+
 <nav class="d-flex align-items-center p-2">
-    <div class="d-flex align-items-center nav-logo">
-        <img id="nav-logo-img" src="${pageContext.request.contextPath}/images/hyperliquid1.gif">
-        <h3 style="margin-left: 5px;font-family: 'Libre Baskerville';">Wallet<h3 style="font-style: italic;font-family: 'Libre Baskerville'">liquid</h3></h3>
+    <div id="nav-1" class="d-flex align-items-center nav-logo">
+        <a class="d-flex" href="#"><img id="nav-logo-img" src="${pageContext.request.contextPath}/images/hyperliquid1.gif"></a>
+        <a class="d-flex text-decoration-none text-white" href="#"><h3>Wallet<h3 style="font-style: italic;">liquid</h3></h3></a>
     </div>
-    <div class="nav-container">
+    <div id="nav-2" class="nav-container">
         <!-- TradingView Widget BEGIN -->
         <div class="tradingview-widget-container">
             <div class="tradingview-widget-container__widget"></div>
@@ -55,8 +67,8 @@
                         "proName": "BITFINEX:NXRAUSD"
                     },
                     {
-                        "description": "LYRA - USD",
-                        "proName": "CRYPTO:LYRAUSD"
+                        "description": "RBN - USD",
+                        "proName": "COINBASE:RBNUSD"
                     },
                     {
                         "description": "QNT - USD",
@@ -89,10 +101,10 @@
         </div>
         <!-- TradingView Widget END -->
     </div>
-    <a href="/login"><button class="p-2 nav-btn">Get Started</button></a>
+    <a id="nav-3" href="/login"><button class="p-2 nav-btn">Get Started</button></a>
 </nav>
 <main class="d-flex">
-    <div id="desc-container" class="w-50">
+    <div id="desc-container">
         <h1>
             Derivatives<br>
             Paper<br>

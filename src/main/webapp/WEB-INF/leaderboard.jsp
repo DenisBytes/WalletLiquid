@@ -14,16 +14,22 @@
 <nav class="d-flex justify-content-between align-items-center p-2">
     <div class="d-flex justify-content-between align-items-center nav-logo nav-brand">
         <div class="d-flex align-items-center">
-            <img id="nav-logo-img" src="${pageContext.request.contextPath}/images/hyperliquid1.gif">
-            <h3>Wallet<h3 style="font-style: italic;">liquid</h3></h3>
+            <a class="d-flex" href="/trade"><img id="nav-logo-img" src="${pageContext.request.contextPath}/images/hyperliquid1.gif"></a>
+            <a class="d-flex text-decoration-none text-white" href="/trade"><h3>Wallet<h3 style="font-style: italic;">liquid</h3></h3></a>
         </div>
         <a href="/trade" class="text-muted text-decoration-none" ><h5>Trade</h5></a>
         <a href="/history/${user.id}" class="text-muted text-decoration-none" ><h5>Trade History</h5></a>
+        <c:if test="${user.roles.get(0).name.contains('ROLE_SUPER_ADMIN') || user.roles.get(0).name.contains('ROLE_ADMIN')}">
+            <a href="/admin" class="text-muted text-decoration-none"><h5>Admin</h5></a>
+        </c:if>
     </div>
     <div class="d-flex nav-brand justify-content-around">
         <h3>Welcome ${user.firstName}</h3>
-        <img src="${pageContext.request.contextPath}${user.image}" alt="Not found" width="50px" height="50px"/>
-        <a href="/logout"><button class="p-2 nav-btn">Log out</button></a>
+        <a href="/history/${user.id}" class="d-flex"><img src="${pageContext.request.contextPath}${user.image}" alt="Not found" width="50px" height="50px" style="background-color: transparent"/></a>
+        <form id="logoutForm" method="POST" action="/logout">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <input class="p-2 nav-btn" type="submit" value="Logout!" />
+        </form>
     </div>
 </nav>
 <main class="m-4 p-4 special-green">

@@ -13,6 +13,7 @@ public class Type {
     public Long id;
 
     @NotBlank
+    @Column(unique = true)
     public String name;
 
     @OneToMany(mappedBy = "type",fetch = FetchType.LAZY)

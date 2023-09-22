@@ -6,8 +6,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -18,16 +20,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "First Name is required")
-    @Size(min=3, max=30, message = "At least 3 characters")
+    @NotBlank(message = "{NotBlank.user.firstName}")
+    @Size(min=3, max=30, message = "{Size.user.firstName}")
     private String firstName;
 
-    @NotBlank(message = "Last Name is required")
-    @Size(min=3, max=30, message = "At least 3 characters")
+    @NotBlank(message = "{NotBlank.user.lastName}")
+    @Size(min=3, max=30, message = "{Size.user.lastName}")
     private String lastName;
 
-    @NotBlank(message = "Email is required")
-    @Size(min=5, message = "At least 5 characters")
+    @Column(unique = true)
+    @NotBlank(message = "{NotBlank.user.email}")
+    @Size(min=5, message = "{Size.user.email}")
     private String email;
 
     private double usd = 100000;
@@ -35,26 +38,35 @@ public class User {
     @NotNull
     private String image = "/images/pfp.png";
 
-    @NotBlank(message = "Password is required")
-    @Size(min=5, message = "At least 5 characters")
-    @Pattern(regexp="^(?=.*[A-Z])(?=.*\\d).*$", message="Password must contain at least one capital letter and two numbers")
+    @NotBlank(message = "{NotBlank.user.password}")
+    @Size(min=5, message = "{Size.user.password}")
+    @Pattern(regexp="^(?=.*[A-Z])(?=.*\\d).*$", message="{Pattern.user.password}")
     private String password;
 
     @Transient
     private String confirm;
 
-    @Column(updatable=false)
-    private Date createdAt;
+    @Column(name = "created_at",updatable=false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdAt;
 
-    @PrePersist
-    protected void onCreate(){
-        this.createdAt = new Date();
-    }
+    @Column(name = "updated_at",updatable=false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime updatedAt;
 
-    private Date lastLogin;
+    @Column(name = "last_login")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime lastLogin;
 
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private List<Transaction> transactions;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles;
 
 
     public User() {}
@@ -107,22 +119,6 @@ public class User {
         this.confirm = confirm;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getLastLogin() {
-        return lastLogin;
-    }
-
-    public void setLastLogin(Date lastLogin) {
-        this.lastLogin = lastLogin;
-    }
-
     public List<Transaction> getTransactions() {
         return transactions;
     }
@@ -146,5 +142,35 @@ public class User {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(LocalDateTime dateTime) {
+        this.lastLogin = dateTime;
+    }
+
+    @PrePersist
+    protected void onCreate(){
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void updateOn(){
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }

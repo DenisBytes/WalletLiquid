@@ -1,10 +1,11 @@
 package com.denis.portfoliospringporject.services;
 
-import com.denis.portfoliospringporject.models.LoginUser;
 import com.denis.portfoliospringporject.models.User;
+import com.denis.portfoliospringporject.repositories.RoleRepository;
 import com.denis.portfoliospringporject.repositories.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
@@ -15,71 +16,65 @@ import java.util.Optional;
 public class UserService {
 
     @Autowired
-    private UserRepository userRepo;
+    private UserRepository userRepository;
 
-    public User register(User newUser, BindingResult result){
+    @Autowired
+    RoleRepository roleRepository;
 
-        Optional<User> potentialUser = userRepo.findByEmail(newUser.getEmail());
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
-        if(potentialUser.isPresent()){
-            result.rejectValue("email","EmailTaken",
-                    "the email has already been taken");
-        }
-        if(!newUser.getPassword().equals(newUser.getConfirm())) {
-            result.rejectValue("confirm", "Matches",
-                    "The Confirm Password must match Password!");
-        }
-        if(result.hasErrors()){
-            return null;
-        }
-        else{
-            String hashed = BCrypt.hashpw(newUser.getPassword(), BCrypt.gensalt());
-            newUser.setPassword(hashed);
-            return userRepo.save(newUser);
-        }
+    public void saveWithUserRole(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setRoles(roleRepository.findByName("ROLE_USER"));
+        userRepository.save(user);
     }
 
-    public User login(LoginUser newLoginObject, BindingResult result){
+    public void saveUserWithAdminRole(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setRoles(roleRepository.findByName("ROLE_ADMIN"));
+        userRepository.save(user);
+    }
 
-        Optional<User> potentialUser = userRepo.findByEmail(newLoginObject.getEmail());
+    public void saveUserWithSuperAdminRole(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setRoles(roleRepository.findByName("ROLE_SUPER_ADMIN"));
+        userRepository.save(user);
+    }
 
-        if(!potentialUser.isPresent()){
-            result.rejectValue("email","EmailNotFound","the email does not exist");
-        }else{
-            if(!BCrypt.checkpw(newLoginObject.getPassword(), potentialUser.get().getPassword())) {
-                result.rejectValue("password", "Matches", "Invalid Password!");
-            }
-        }
-        if(result.hasErrors()){
-            return null;
-        }else{
-            return potentialUser.get();
-        }
+    public boolean isEmailAlreadyRegistered(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public void upgradeUser(User user) {
+        user.setRoles(roleRepository.findByName("ROLE_ADMIN"));
+        userRepository.save(user);
     }
 
     public void updateUser(User user) {
-        userRepo.save(user);
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
     }
 
     public User findByEmail(String email) {
-        return userRepo.findByEmail(email).orElse(null);
+        return userRepository.findByEmail(email);
     }
 
     public List<User> allUsers(){
-        return userRepo.findAll();
+        return userRepository.findAll();
     }
 
 
     public void deleteUser(User user) {
-        userRepo.delete(user);
+        userRepository.delete(user);
     }
 
     public User findById(Long id) {
-        return userRepo.findById(id).orElse(null);
+        return userRepository.findById(id).orElse(null);
     }
 
     public List<User> allUserByMostUsd(){
-        return userRepo.findAllByOrderByUsdDesc();
+        return userRepository.findAllByOrderByUsdDesc();
     }
 
 }

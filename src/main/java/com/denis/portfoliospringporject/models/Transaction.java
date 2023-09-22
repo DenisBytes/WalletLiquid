@@ -3,11 +3,10 @@ package com.denis.portfoliospringporject.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transactions")
@@ -19,36 +18,41 @@ public class Transaction {
     @Column(name = "`order`")
     private String order;
 
-    @NotBlank(message = "Long or short is required!")
+    @NotBlank(message = "{NotBlank.transaction.direction}")
     private String direction;
 
+    @NotBlank(message = "{NotBlank.transaction.symbol}")
     private String symbol;
 
-    @NotNull(message = "Leverage is required!")
+    @NotNull(message = "{NotNull.transaction.leverage}")
     private int leverage;
 
+    @NotNull(message = "{NotNull.transaction.price}")
     private double price;
 
     private double lastPrice;
 
     private double earnings;
 
-    @NotNull(message = "Amount is required!")
-    @Range(min = 1, message = "Amount has to be minimum 1 usd and not bigger than your portfolio")
+    @NotNull(message = "{NotNull.transaction.amount}")
+    @Range(min = 1, message = "{Range.transaction.amount}")
     private double amount;
 
+    @NotNull(message = "{NotNull.transaction.tokenSize}")
+    @Column(name = "token_size")
     private double tokenSize;
 
+    @NotNull(message = "{NotNull.transaction.liqPrice}")
+    @Column(name = "liquidation_price")
     private double liqPrice;
 
-    @Column(updatable=false)
-    private Date createdAt;
+    @Column(name = "created_at",updatable=false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdAt;
 
-    @PrePersist
-    protected void onCreate(){
-        this.createdAt = new Date();
-    }
-
+    @Column(name = "closed_at",updatable=false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime closedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -57,7 +61,6 @@ public class Transaction {
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn (name = "type_id")
     public Type type;
-
 
     public Transaction(){
 
@@ -166,7 +169,20 @@ public class Transaction {
         this.liqPrice = liqPrice;
     }
 
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    @PrePersist
+    protected void onCreate(){
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public LocalDateTime getClosedAt() {
+        return closedAt;
+    }
+
+    public void setClosedAt(LocalDateTime closedAt) {
+        this.closedAt = closedAt;
     }
 }

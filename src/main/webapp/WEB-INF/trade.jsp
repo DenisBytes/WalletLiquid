@@ -14,24 +14,24 @@
 <nav class="d-flex justify-content-between align-items-center p-2">
     <div class="d-flex justify-content-between align-items-center nav-logo nav-brand">
         <div class="d-flex align-items-center">
-            <img id="nav-logo-img" src="${pageContext.request.contextPath}/images/hyperliquid1.gif">
-            <h3>Wallet<h3 style="font-style: italic;">liquid</h3></h3>
+          <a class="d-flex" href="#"><img id="nav-logo-img" src="${pageContext.request.contextPath}/images/hyperliquid1.gif"></a>
+          <a class="d-flex text-decoration-none text-white" href="#"><h3>Wallet<h3 style="font-style: italic;">liquid</h3></h3></a>
         </div>
         <a href="/leaderboard" class="text-muted text-decoration-none" ><h5>Leaderboard</h5></a>
         <a href="/history/${user.id}" class="text-muted text-decoration-none" ><h5>Trade History</h5></a>
+      <c:if test="${user.roles.get(0).name.contains('ROLE_SUPER_ADMIN') || user.roles.get(0).name.contains('ROLE_ADMIN')}">
+        <a href="/admin" class="text-muted text-decoration-none"><h5>Admin</h5></a>
+      </c:if>
     </div>
     <div class="d-flex nav-brand justify-content-around">
       <h3>Welcome ${user.firstName}</h3>
-      <img src="${pageContext.request.contextPath}${user.image}" alt="Not found" width="50px" height="50px" style="background-color: transparent"/>
-      <a href="/logout"><button class="p-2 nav-btn">Log out</button></a>
+      <a href="/edit/profile" class="d-flex"><img src="${pageContext.request.contextPath}${user.image}" alt="Not found" width="50px" height="50px" style="background-color: transparent"/></a>
+      <form id="logoutForm" method="POST" action="/logout">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        <input class="p-2 nav-btn" type="submit" value="Logout!" />
+      </form>
     </div>
 </nav>
-
-<c:if test="${errorMessage != null}">
-  <span class="w-100 d-flex justify-content-center">
-    <h1>${errorMessage}</h1>
-  </span>
-</c:if>
 
 <div class="trading-container special-green">
   <div class="d-flex special-green">
@@ -39,7 +39,7 @@
       <div class="d-flex justify-content-between align-items-center w-100 mini-nav special-green">
         <div class="special-green">
           <form method="post" class="special-green" action="/elaborate">
-            <select name="symbol" id="symbolSelect" class="special-darkgreen" style="color:white;">
+            <select name="symbol" id="symbolSelect" class="special-darkgreen p-1" style="color:white; border: 1px solid #97fce4; border-radius: 0.3rem">
               <option value="BTC" ${symbol == 'BTC' ? 'selected' : ''}>BTC / USD</option>
               <option value="ETH" ${symbol == 'ETH' ? 'selected' : ''}>ETH / USD</option>
               <option value="LINK" ${symbol == 'LINK' ? 'selected' : ''}>LINK / USD</option>
@@ -49,7 +49,7 @@
             <button class="nav-btn" type="submit">Go</button>
           </form>
         </div>
-        <!-- TradingView Widget BEGIN -->
+
         <div class="tradingview-widget-container w-75">
           <div class="tradingview-widget-container__widget"></div>
           <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
@@ -84,7 +84,7 @@
             }
           </script>
         </div>
-        <!-- TradingView Widget END -->
+
       </div>
       <div class="tradingview-widget-container row w-100" style="margin-top: 2%">
         <div id="tradingview_6184e" class="special-green"></div>
@@ -113,7 +113,7 @@
         </script>
       </div>
       <div>
-        <!-- TradingView Widget BEGIN -->
+
         <div class="tradingview-widget-container">
           <div class="tradingview-widget-container__widget"></div>
           <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
@@ -147,7 +147,7 @@
             }
           </script>
         </div>
-        <!-- TradingView Widget END -->
+
       </div>
     </div>
 
@@ -261,18 +261,20 @@
       <div class="tab-content special-darkgreen">
         <div class="tab-pane fade show active special-darkgreen" id="market">
           <form:form action="/marketorder" method="post" modelAttribute="transactionMarket">
+
             <div class="row special-darkgreen" style="padding: 2%;margin-top: 5%;">
-              <form:errors path="${transactionMarket.*}"></form:errors>
               <form:select path="direction" cssClass="toggle-dropdown special-green" cssStyle="color: white; padding: 1%;border: 1px solid #97fce4;border-radius: 0.5rem;">
                 <form:option value="long" label="Long" />
                 <form:option value="short" label="Short" />
               </form:select>
             </div>
+
             <div class="row special-darkgreen" style="padding: 2%">
               <p><form:label path="amount">Amount: </form:label></p>
               <form:errors path="amount" cssStyle="color: white"/>
               <form:input type="number" cssClass="special-green" cssStyle="color: white; border: 1px solid #97fce4;border-radius: 0.5rem; padding: 1%" path="amount"></form:input>
             </div>
+
             <div class="row special-darkgreen">
               <div class="d-flex special-darkgreen">
                 <p style="margin-right: 5%"><form:label path="leverage">Leverage: </form:label></p>
@@ -281,11 +283,13 @@
               <form:errors path="leverage"></form:errors>
               <form:input path="leverage" type="range" id="leverageSlider" name="leverage" min="1" max="100" step="1" onchange="updateValue(this.value)" />
             </div>
+
             <div class="row special-darkgreen" style="padding: 2%">
               <p><b>Current Price: </b><span id="currentPrice"></span></p>
               <p><b>Liquidation Price: </b><span id="liquidationPrice"></span></p>
               <p><b>Portfolio: </b>${user.usd} USD</p>
             </div>
+
             <form:hidden path="price" id="currentPriceInput" name="currentPrice" />
             <form:hidden path="symbol" value="${symbol}" />
 
@@ -601,9 +605,6 @@
           </section>
         </div>
       </div>
-      <div class="tab-pane fade d-flex justify-content-center" id="orders">
-        <h1 style="color: white; margin: 1%">Coming Soon...</h1>
-      </div>
       <div class="tab-pane fade" id="trades">
         <section class="side">
           <table class="table" style="color: white;">
@@ -619,25 +620,28 @@
             </tr>
             </thead>
             <tbody>
-              <c:forEach var="transaction" items="${closedOrders}">
-                <tr>
-                  <c:if test="${transaction.direction == 'long'}">
-                    <td class="text-success" style="padding: 1%">${transaction.symbol}-USD</td>
-                  </c:if>
-                  <c:if test="${transaction.direction == 'short'}">
-                    <td class="text-danger" style="padding: 1%">${transaction.symbol}-USD</td>
-                  </c:if>
-                  <td style="padding: 1%">${transaction.tokenSize} ${transaction.symbol}</td>
-                  <td style="padding: 1%">${transaction.amount}</td>
-                  <td style="padding: 1%">${transaction.leverage}</td>
-                  <td style="padding: 1%">${transaction.price}</td>
-                  <td style="padding: 1%">${transaction.lastPrice}</td>
-                  <td style="padding: 1%" class="${transaction.earnings >= 0 ? 'text-success' : 'text-danger'}">${transaction.earnings}</td>
-                </tr>
-              </c:forEach>
+            <c:forEach var="transaction" items="${closedOrders}">
+              <tr>
+                <c:if test="${transaction.direction == 'long'}">
+                  <td class="text-success" style="padding: 1%">${transaction.symbol}-USD</td>
+                </c:if>
+                <c:if test="${transaction.direction == 'short'}">
+                  <td class="text-danger" style="padding: 1%">${transaction.symbol}-USD</td>
+                </c:if>
+                <td style="padding: 1%">${transaction.tokenSize} ${transaction.symbol}</td>
+                <td style="padding: 1%">${transaction.amount}</td>
+                <td style="padding: 1%">${transaction.leverage}</td>
+                <td style="padding: 1%">${transaction.price}</td>
+                <td style="padding: 1%">${transaction.lastPrice}</td>
+                <td style="padding: 1%" class="${transaction.earnings >= 0 ? 'text-success' : 'text-danger'}">${transaction.earnings}</td>
+              </tr>
+            </c:forEach>
             </tbody>
           </table>
         </section>
+      </div>
+      <div class="tab-pane fade d-flex justify-content-center" id="orders">
+        <h1 style="color: white; margin: 1%">Coming Soon...</h1>
       </div>
     </div>
 </div>
