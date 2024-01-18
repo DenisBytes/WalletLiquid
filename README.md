@@ -1,5 +1,5 @@
 # WalletLiquid - Crypto Futures Paper Trading Platform
-  Welcome to WalletLiquid, a derivative paper trading platform where you can simulate trading crypto futures and compete with other users through a scoreboard. This platform provides a risk-free environment for users to practice trading strategies and improve their skills in the exciting world of cryptocurrency futures.
+Platform where you can paper trade ("fake" money) crypto futures.
 
 ## Getting Started
    To run WalletLiquid locally, follow these simple steps:
